@@ -1,6 +1,34 @@
 #include "hlddz_game_data_service_api_impl.h"
 #include <Tlhelp32.h>
 
+GDPS_NAMESPACE_BEGIN
+gdps_bool hlddz_game_data_service_impl::initialize()
+{
+    return false;
+}
+gdps_void hlddz_game_data_service_impl::uninitialize()
+{
+
+}
+auto  hlddz_game_data_service_impl::get_current_turning_role()
+{
+
+}
+auto  hlddz_game_data_service_impl::get_role_card_number(role_position role_id)
+{
+
+}
+auto hlddz_game_data_service_impl::get_role_hand_cards(role_position role_id)
+{
+
+}
+auto hlddz_game_data_service_impl::get_role_given_cards(role_position role_id)
+{
+
+}
+
+GDPS_NAMESPACE_END
+
 HMODULE GethlddzProcessBase()
 {
     //获取进程基址
