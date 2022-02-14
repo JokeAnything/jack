@@ -10,7 +10,7 @@
 
 GDPS_NAMESPACE_BEGIN
 
-    // 数据类型定义
+    // data structs define
     using gdps_uint32_t = unsigned int;
     using gdps_int32_t = int;
 

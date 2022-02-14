@@ -3,7 +3,6 @@
 #include "../game_data_provider_service_defs.h"
 #include <windows.h>
 
-GDPS_NAMESPACE_BEGIN
 class hlddz_game_data_service_impl
 {
 public:
