@@ -15,24 +15,7 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="include\logger.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="src\logger_client.h">
-      <Filter>源文件</Filter>
-    </ClInclude>
-    <ClInclude Include="include\logger_server.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
-  </ItemGroup>
-  <ItemGroup>
-    <ClCompile Include="src\logger.cpp">
-      <Filter>源文件</Filter>
-    </ClCompile>
-    <ClCompile Include="src\logger_client.cpp">
-      <Filter>源文件</Filter>
-    </ClCompile>
-    <ClCompile Include="src\logger_server.cpp">
+    <ClCompile Include="src\logman.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
   </ItemGroup>

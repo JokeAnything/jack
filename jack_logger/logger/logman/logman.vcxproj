@@ -19,25 +19,18 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="include\logger.h" />
-    <ClInclude Include="include\logger_server.h" />
-    <ClInclude Include="src\logger_client.h" />
-  </ItemGroup>
-  <ItemGroup>
-    <ClCompile Include="src\logger.cpp" />
-    <ClCompile Include="src\logger_client.cpp" />
-    <ClCompile Include="src\logger_server.cpp" />
+    <ClCompile Include="src\logman.cpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>15.0</VCProjectVersion>
-    <ProjectGuid>{BDA076B2-738C-498F-B8C2-EA5F4164D188}</ProjectGuid>
+    <ProjectGuid>{4B2C46E4-DFA9-496B-9EB4-85F24133A3D2}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
-    <RootNamespace>liblogger</RootNamespace>
+    <RootNamespace>logman</RootNamespace>
     <WindowsTargetPlatformVersion>10.0.14393.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
-    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
     <PlatformToolset>v141</PlatformToolset>
     <CharacterSet>Unicode</CharacterSet>
@@ -85,7 +78,6 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <LinkIncremental>true</LinkIncremental>
-    <OutDir>$(SolutionDir)\jack_logger\logger\liblogger\$(Configuration)\</OutDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
@@ -112,12 +104,13 @@
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>E:\jack\zeromq-4.3.4\include;./include;</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>E:\jack\zeromq-4.3.4\include;./include;$(SolutionDir)\jack_logger\logger\liblogger\include;</AdditionalIncludeDirectories>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
-      <AdditionalDependencies>kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;libzmq.lib;Ws2_32.lib;Rpcrt4.lib;Iphlpapi.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;libzmq.lib;Ws2_32.lib;Rpcrt4.lib;Iphlpapi.lib;liblogger.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>E:\jack\zeromq-4.3.4\bin\Win32\Debug\v141\static;$(SolutionDir)\jack_logger\logger\liblogger\$(Configuration);</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
