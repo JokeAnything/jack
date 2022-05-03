@@ -1,86 +1,52 @@
 #include "hlddz_game_data_service_api_impl.h"
 #include <Tlhelp32.h>
+#include "logger\logger.h"
 
 GDPS_NAMESPACE_BEGIN
+
 gdps_bool hlddz_game_data_service_impl::initialize()
+{
+    if (!m_action_object.initialize())
+    {
+        return false;
+    }
+    DEBUG_MSG(logger_level_debug, DEBUG_TEXT_FORMAT("hlddz game data service initialized."));
+    return true;
+}
+
+gdps_void hlddz_game_data_service_impl::uninitialize()
+{
+    m_action_object.uninitialize();
+    DEBUG_MSG(logger_level_debug, DEBUG_TEXT_FORMAT("hlddz game data service deinitialized."));
+}
+
+bool hlddz_game_data_service_impl::get_current_turning_role(role_position& pos)
+{
+    pos = role_position_invalid;
+    DEBUG_MSG(logger_level_info, DEBUG_TEXT_FORMAT("current turn pos:%d."), pos);
+    return false;
+}
+
+bool hlddz_game_data_service_impl::get_role_card_number(role_position role_id, card_number& number)
+{
+    DEBUG_MSG(logger_level_info, DEBUG_TEXT_FORMAT("pos:%d.car number:%d"), role_id, number);
+    return false;
+}
+
+bool hlddz_game_data_service_impl::get_role_hand_cards(role_position role_id, card_list& list)
 {
     return false;
 }
-gdps_void hlddz_game_data_service_impl::uninitialize()
-{
 
+bool hlddz_game_data_service_impl::get_role_given_cards(role_position role_id, card_list& list)
+{
+    return false;
 }
-auto  hlddz_game_data_service_impl::get_current_turning_role()
-{
 
-}
-auto  hlddz_game_data_service_impl::get_role_card_number(role_position role_id)
+bool hlddz_game_data_service_impl::execute_current_player_action(player_action_type type)
 {
-
-}
-auto hlddz_game_data_service_impl::get_role_hand_cards(role_position role_id)
-{
-
-}
-auto hlddz_game_data_service_impl::get_role_given_cards(role_position role_id)
-{
-
+    DEBUG_MSG(logger_level_info, DEBUG_TEXT_FORMAT("execute player action:%d"), type);
+    return m_action_object.click_button(type);
 }
 
 GDPS_NAMESPACE_END
-HMODULE GethlddzProcessBase()
-{
-    HANDLE hSnapShot;
-    hSnapShot = CreateToolhelp32Snapshot(TH32CS_SNAPMODULE, get_process_id(MAIN_PE_NAME));
-    if (hSnapShot == INVALID_HANDLE_VALUE)
-    {
-        return NULL;
-    }
-    MODULEENTRY32 ModuleEntry32;
-    ModuleEntry32.dwSize = sizeof(ModuleEntry32);
-    if (Module32First(hSnapShot, &ModuleEntry32))
-    {
-        do
-        {
-            if (strstr(ModuleEntry32.szExePath, MAIN_PE_NAME))
-            {
-                CloseHandle(hSnapShot);
-                return ModuleEntry32.hModule;
-            }
-        } while (Module32Next(hSnapShot, &ModuleEntry32));
-    }
-    CloseHandle(hSnapShot);
-    return NULL;
-}
-
-DWORD get_process_id(const wchar_t *processName)
-{
-    if (processName == nullptr)
-    {
-        return 0;
-    }
-
-    PROCESSENTRY32 pe32;
-
-    pe32.dwSize = sizeof(PROCESSENTRY32);
-
-    HANDLE hProcessSnap = ::CreateToolhelp32Snapshot(TH32CS_SNAPPROCESS, 0);
-    if (hProcessSnap == INVALID_HANDLE_VALUE)
-    {
-        return 0;
-    }
-
-
-    BOOL bMore = ::Process32First(hProcessSnap, &pe32);
-    while (bMore)
-    {
-        if (lstrcmp(pe32.szExeFile, processName) == 0)
-        {
-            break;
-        }
-        bMore = ::Process32Next(hProcessSnap, &pe32);
-    }
-    ::CloseHandle(hProcessSnap);
-
-    return pe32.th32ProcessID;
-}

@@ -28,6 +28,7 @@
     <ClInclude Include="game_data_provider\hlddz\hlddz_data_bin_offset_defs.h">
       <Filter>hlddz</Filter>
     </ClInclude>
+    <ClInclude Include="game_data_provider_service_logger.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="game_data_provider\hlddz\hlddz_game_data_service.cpp">

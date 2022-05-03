@@ -13,6 +13,13 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "jack_logger", "jack_logger"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "liblogger", "jack_logger\logger\liblogger\liblogger.vcxproj", "{BDA076B2-738C-498F-B8C2-EA5F4164D188}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "jack_food", "jack_food", "{FD597A0B-FDFC-423B-B192-3189FC38D59A}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "game_data_provider", "jack_food\game_data_provider.vcxproj", "{9D82D2BC-4F40-41FE-846F-86D49E2AAF55}"
+	ProjectSection(ProjectDependencies) = postProject
+		{BDA076B2-738C-498F-B8C2-EA5F4164D188} = {BDA076B2-738C-498F-B8C2-EA5F4164D188}
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64
@@ -37,6 +44,14 @@ Global
 		{BDA076B2-738C-498F-B8C2-EA5F4164D188}.Release|x64.Build.0 = Release|x64
 		{BDA076B2-738C-498F-B8C2-EA5F4164D188}.Release|x86.ActiveCfg = Release|Win32
 		{BDA076B2-738C-498F-B8C2-EA5F4164D188}.Release|x86.Build.0 = Release|Win32
+		{9D82D2BC-4F40-41FE-846F-86D49E2AAF55}.Debug|x64.ActiveCfg = Debug|x64
+		{9D82D2BC-4F40-41FE-846F-86D49E2AAF55}.Debug|x64.Build.0 = Debug|x64
+		{9D82D2BC-4F40-41FE-846F-86D49E2AAF55}.Debug|x86.ActiveCfg = Debug|Win32
+		{9D82D2BC-4F40-41FE-846F-86D49E2AAF55}.Debug|x86.Build.0 = Debug|Win32
+		{9D82D2BC-4F40-41FE-846F-86D49E2AAF55}.Release|x64.ActiveCfg = Release|x64
+		{9D82D2BC-4F40-41FE-846F-86D49E2AAF55}.Release|x64.Build.0 = Release|x64
+		{9D82D2BC-4F40-41FE-846F-86D49E2AAF55}.Release|x86.ActiveCfg = Release|Win32
+		{9D82D2BC-4F40-41FE-846F-86D49E2AAF55}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -45,5 +60,6 @@ Global
 		{2B7B34B3-A0AF-4A34-9CCB-C5C2A4A34FCD} = {8FDFBBE5-C762-4FA6-A2D5-25FCCC1E01BB}
 		{C21C96DF-B82D-4617-9D84-95341AA73621} = {2B7B34B3-A0AF-4A34-9CCB-C5C2A4A34FCD}
 		{BDA076B2-738C-498F-B8C2-EA5F4164D188} = {EE4D1C58-863E-4A2E-8433-010500375E69}
+		{9D82D2BC-4F40-41FE-846F-86D49E2AAF55} = {FD597A0B-FDFC-423B-B192-3189FC38D59A}
 	EndGlobalSection
 EndGlobal

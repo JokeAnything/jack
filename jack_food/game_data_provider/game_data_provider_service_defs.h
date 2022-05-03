@@ -20,7 +20,7 @@ GDPS_NAMESPACE_BEGIN
     using gdps_uint8_t = unsigned char;
     using gdps_int8_t = char;
 
-    using gdps_uint32_ptr_t = ULONG_PTR;
+    using gdps_uint32_ptr_t = void*;
 
     using gdps_void = void;
 
@@ -33,9 +33,10 @@ GDPS_NAMESPACE_BEGIN
 
     enum role_position
     {
-        role_position_landlord_up = 0,
-        role_position_landlord = 1,
-        role_position_landlord_down = 2,
+        role_position_invalid = 0,
+        role_position_landlord_up = 1,
+        role_position_landlord = 2,
+        role_position_landlord_down = 3,
     };
 
     using card_number = gdps_uint32_t;
