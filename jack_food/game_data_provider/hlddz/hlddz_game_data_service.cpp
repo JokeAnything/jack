@@ -21,7 +21,6 @@ gdps_void hlddz_game_data_service::uninitialize()
         stop_data_service();
         m_is_started = false;
     }
-    DEBUG_MSG(logger_level_debug, DEBUG_TEXT_FORMAT("game data service deinitialized."));
 }
 
 gdps_bool hlddz_game_data_service::start_data_service()
@@ -74,10 +73,16 @@ gdps_void hlddz_game_data_service::main_work_proc()
 
         std::this_thread::sleep_for(std::chrono::seconds(1));
 
-        auto action_type = player_action_type_invalid;
+        //auto action_type = player_action_type_invalid;
+        //auto api = get_data_service_game_api();
+        //api->execute_current_player_action(action_type);
+        //action_type = player_action_type_invalid;
         auto api = get_data_service_game_api();
-        api->execute_current_player_action(action_type);
-        action_type = player_action_type_invalid;
+        if (api)
+        {
+            role_position pos;
+            api->get_current_turning_role(pos);
+        }
     }
 
     m_data_service_impl->uninitialize();

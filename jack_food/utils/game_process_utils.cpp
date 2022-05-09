@@ -85,3 +85,62 @@ bool game_process_utils::hook_function_table_proc(const void* target_fun_table_a
     ::VirtualProtect((LPVOID)target_fun_table_addr, sizeof(void*), dwOld, &dwOld);
     return true;
 }
+
+bool game_process_utils::set_inline_hook(unsigned char* lphooked_addr,
+    unsigned char* target_proc,
+    void** jmp_back_proc,
+    uint32_t num,
+    unsigned char** code_backup)
+{
+    if (!lphooked_addr || !target_proc || !jmp_back_proc ||!code_backup)
+    {
+        return false;
+    }
+
+    if (num < 5)
+    {
+        return false;
+    }
+
+    //改变修改地址为可写属性
+    DWORD OldProtect = 0;
+    DWORD bret = ::VirtualProtect((LPBYTE)lphooked_addr, num, PAGE_EXECUTE_READWRITE, &OldProtect);
+    if (bret == 0)
+    {
+        return false;
+    }
+
+    auto backup_ptr = (unsigned char*)malloc(num * sizeof(unsigned char));
+    memcpy(backup_ptr, lphooked_addr, num);
+
+    auto jmp_addr = (uint32_t)(target_proc - lphooked_addr - 5);
+    *lphooked_addr = 0xE9;
+    *(uint32_t*)(lphooked_addr + 1) = jmp_addr;
+    *jmp_back_proc = (void*)(lphooked_addr + num);
+    *code_backup = backup_ptr;
+
+    ::VirtualProtect((LPBYTE)lphooked_addr, num, OldProtect, &OldProtect);
+    return true;
+}
+
+bool game_process_utils::restore_inline_hook(unsigned char* lphooked_addr,
+    unsigned char* code_backup,
+    uint32_t backup_num)
+{
+    if (!lphooked_addr || !code_backup || !backup_num)
+    {
+        return false;
+    }
+
+    //改变修改地址为可写属性
+    DWORD OldProtect = 0;
+    DWORD bret = ::VirtualProtect((LPBYTE)lphooked_addr, backup_num, PAGE_EXECUTE_READWRITE, &OldProtect);
+    if (bret == 0)
+    {
+        return false;
+    }
+    memcpy(lphooked_addr, code_backup, backup_num);
+    ::VirtualProtect((LPBYTE)lphooked_addr, backup_num, OldProtect, &OldProtect);
+    free(code_backup);
+    return true;
+}

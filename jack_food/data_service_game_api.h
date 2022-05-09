@@ -20,6 +20,41 @@ enum player_action_type
     player_action_type_do_give = 9,
 };
 
+enum game_status_type
+{
+    game_status_type_invalid = 0,
+    game_status_type_starting = 1,
+    game_status_type_started = 2,
+    game_status_type_bidding = 3,
+    game_status_type_bidden = 4,
+    game_status_type_multiuping = 5,
+    game_status_type_multiuped = 6,
+    game_status_type_giving = 7,
+    game_status_type_given = 8,
+    game_status_type_over = 9,
+};
+
+enum role_position
+{
+    role_position_myself = 0,
+    role_position_right = 1,
+    role_position_left = 2,
+    role_position_invalid
+};
+
+struct card_item
+{
+    gdps_uint8_t m_card_value = 0;
+    gdps_uint8_t m_card_shape = 0;
+    gdps_uint8_t m_card_level = 0;
+};
+
+using card_list = std::vector<card_item>;
+
+using given_history_list = std::vector<card_list>;
+
+using card_ui_value = std::string;
+
 class data_service_game_api
 {
 public:

@@ -34,9 +34,11 @@ __declspec(naked) void get_button_object_this_stub()
         push [esp + 4]
         call hlddz_game_action_impl::s_original_get_button_proc
         pushad
+        pushfd
         push eax
-        push [esp + 32 + 4 + 4]
+        push [esp + 32 + 4 + 4 + 4]
         call set_button_object
+        popfd
         popad
         retn 4
     }
@@ -56,9 +58,11 @@ DWORD WINAPI btn_click_thread_proc(LPVOID lpParam)
         __asm
         {
             pushad
+            pushfd
             mov ecx, btn_object
             push 2 // clicked event type.
             call proc_address
+            popfd
             popad
         }
     }

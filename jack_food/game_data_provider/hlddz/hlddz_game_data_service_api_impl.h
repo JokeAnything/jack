@@ -3,6 +3,7 @@
 #include "../game_data_provider_service_defs.h"
 #include "../../data_service_game_api.h"
 #include "hlddz_game_action_impl.h"
+#include "hlddz_game_round_impl.h"
 
 #include <windows.h>
 
@@ -28,6 +29,7 @@ private:
 private:
 
     hlddz_game_action_impl m_action_object;
+    hlddz_game_round_impl m_game_round_object;
 };
 
 using hlddz_game_data_service_impl_ptr = std::shared_ptr<hlddz_game_data_service_impl>;

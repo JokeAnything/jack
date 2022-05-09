@@ -31,25 +31,7 @@ GDPS_NAMESPACE_BEGIN
     template< class T >
     using gdps_shared_ptr = std::shared_ptr<T>;
 
-    enum role_position
-    {
-        role_position_invalid = 0,
-        role_position_landlord_up = 1,
-        role_position_landlord = 2,
-        role_position_landlord_down = 3,
-    };
-
     using card_number = gdps_uint32_t;
-
-    struct card_item
-    {
-        gdps_uint8_t m_card_value = 0;
-        gdps_uint8_t m_card_shape = 0;
-        gdps_uint8_t m_card_level = 0;
-    };
-
-    using card_list = std::vector<card_item>;
-
 
 GDPS_NAMESPACE_END
 

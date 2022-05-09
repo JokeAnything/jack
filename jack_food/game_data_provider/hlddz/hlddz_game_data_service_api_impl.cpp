@@ -10,20 +10,26 @@ gdps_bool hlddz_game_data_service_impl::initialize()
     {
         return false;
     }
+    if (!m_game_round_object.initialize())
+    {
+        return false;
+    }
     DEBUG_MSG(logger_level_debug, DEBUG_TEXT_FORMAT("hlddz game data service initialized."));
     return true;
 }
 
 gdps_void hlddz_game_data_service_impl::uninitialize()
 {
+    m_game_round_object.uninitialize();
     m_action_object.uninitialize();
     DEBUG_MSG(logger_level_debug, DEBUG_TEXT_FORMAT("hlddz game data service deinitialized."));
 }
 
 bool hlddz_game_data_service_impl::get_current_turning_role(role_position& pos)
 {
-    pos = role_position_invalid;
-    DEBUG_MSG(logger_level_info, DEBUG_TEXT_FORMAT("current turn pos:%d."), pos);
+    m_game_round_object.get_current_turning(pos);
+    //pos = role_position_invalid;
+    //DEBUG_MSG(logger_level_info, DEBUG_TEXT_FORMAT("current turn pos:%d."), pos);
     return false;
 }
 

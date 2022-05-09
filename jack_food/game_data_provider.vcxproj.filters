@@ -29,6 +29,12 @@
       <Filter>hlddz</Filter>
     </ClInclude>
     <ClInclude Include="game_data_provider_service_logger.h" />
+    <ClInclude Include="game_data_provider\hlddz\hlddz_game_round_impl.h">
+      <Filter>hlddz</Filter>
+    </ClInclude>
+    <ClInclude Include="game_data_provider\hlddz\hlddz_inline_hook.h">
+      <Filter>hlddz</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="game_data_provider\hlddz\hlddz_game_data_service.cpp">
@@ -43,6 +49,9 @@
       <Filter>utils</Filter>
     </ClCompile>
     <ClCompile Include="game_data_provider\hlddz\hlddz_game_action_impl.cpp">
+      <Filter>hlddz</Filter>
+    </ClCompile>
+    <ClCompile Include="game_data_provider\hlddz\hlddz_game_round_impl.cpp">
       <Filter>hlddz</Filter>
     </ClCompile>
   </ItemGroup>

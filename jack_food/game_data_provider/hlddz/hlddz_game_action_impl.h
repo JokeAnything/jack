@@ -40,6 +40,7 @@ private:
 
     std::map<object_name, button_object_node> m_button_object_list;
 
+
     std::mutex data_locker;
 };
 

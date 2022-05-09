@@ -4,6 +4,7 @@
 #include <future>
 #include <iostream>
 
+HMODULE g_hModule = NULL;
 void start_data_service()
 {
     auto ds_ptr = GDPS::data_service_factory::get_data_service_object(GDPS::data_service_type_hlddz);
@@ -87,6 +88,7 @@ BOOL APIENTRY DllMain(HMODULE hModule, DWORD ul_reason_for_call, LPVOID lpReserv
             DWORD dwTid = 0;
             auto handle = ::CreateThread(NULL, 0, ThreadProc, (LPVOID)1, 0, &dwTid);
             ::CloseHandle(handle);
+            g_hModule = hModule;
         }
         break;
     case DLL_PROCESS_DETACH:

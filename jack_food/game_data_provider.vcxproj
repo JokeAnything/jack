@@ -27,6 +27,8 @@
     <ClInclude Include="game_data_provider\hlddz\hlddz_game_action_impl.h" />
     <ClInclude Include="game_data_provider\hlddz\hlddz_game_data_service.h" />
     <ClInclude Include="game_data_provider\hlddz\hlddz_game_data_service_api_impl.h" />
+    <ClInclude Include="game_data_provider\hlddz\hlddz_game_round_impl.h" />
+    <ClInclude Include="game_data_provider\hlddz\hlddz_inline_hook.h" />
     <ClInclude Include="game_data_provider_service_logger.h" />
     <ClInclude Include="utils\game_process_utils.h" />
   </ItemGroup>
@@ -36,6 +38,7 @@
     <ClCompile Include="game_data_provider\hlddz\hlddz_game_action_impl.cpp" />
     <ClCompile Include="game_data_provider\hlddz\hlddz_game_data_service.cpp" />
     <ClCompile Include="game_data_provider\hlddz\hlddz_game_data_service_api_impl.cpp" />
+    <ClCompile Include="game_data_provider\hlddz\hlddz_game_round_impl.cpp" />
     <ClCompile Include="utils\game_process_utils.cpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">

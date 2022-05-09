@@ -49,9 +49,14 @@ public:
         time_t now_time = time(NULL);
         tm st_tm = { 0 };
         localtime_s(&st_tm, &now_time);
-
         string_t::value_type time_buffer[512] = { 0 };
-        asctime_s(time_buffer, &st_tm);
+        sprintf_s(time_buffer, "[%02d-%02d-%02d %02d:%02d:%02d]",
+            st_tm.tm_year + 1900,
+            st_tm.tm_mon + 1,
+            st_tm.tm_mday,
+            st_tm.tm_hour,
+            st_tm.tm_min,
+            st_tm.tm_sec);
         std::string current_time_text = time_buffer;
         log_text += current_time_text;
     }
@@ -90,6 +95,8 @@ private:
 
 };
 
+//LOGGER::logger_utils::append_from_info(log_content, __FILE__, __FUNCTION__, __LINE__);
+
 LOGGER_NAMESPACE_END
 
 #define DEBUG_TEXT_FORMAT(x)    x
@@ -103,7 +110,6 @@ LOGGER_NAMESPACE_END
         LOGGER::logger_utils::append_log_time(log_content); \
         LOGGER::logger_utils::append_project_name(log_content); \
         LOGGER::logger_utils::append_log_info(log_content, __VA_ARGS__); \
-        LOGGER::logger_utils::append_from_info(log_content, __FILE__, __FUNCTION__, __LINE__); \
         api_ptr->log_message(LOGGER::level,log_content); \
     } \
 } \

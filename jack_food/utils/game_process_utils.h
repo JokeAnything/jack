@@ -15,6 +15,16 @@ public:
     static process_id get_process_id(const wchar_t *processName);
     static bool hook_function_table_proc(const void* target_fun_table_addr, const void* target_fun_ptr, void** original_fun_ptr);
 
+    static bool set_inline_hook(unsigned char* lphooked_addr,
+        unsigned char* target_proc,
+        void** jmp_back_proc,
+        uint32_t num,
+        unsigned char** code_backup);
+
+    static bool restore_inline_hook(unsigned char* lphooked_addr,
+        unsigned char* code_backup,
+        uint32_t backup_num);
+
 private:
 
 };
