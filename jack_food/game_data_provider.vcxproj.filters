@@ -32,7 +32,10 @@
     <ClInclude Include="game_data_provider\hlddz\hlddz_game_round_impl.h">
       <Filter>hlddz</Filter>
     </ClInclude>
-    <ClInclude Include="game_data_provider\hlddz\hlddz_inline_hook.h">
+    <ClInclude Include="game_data_provider\hlddz\hlddz_action_inline_hook.h">
+      <Filter>hlddz</Filter>
+    </ClInclude>
+    <ClInclude Include="game_data_provider\hlddz\hlddz_round_inline_hook.h">
       <Filter>hlddz</Filter>
     </ClInclude>
   </ItemGroup>

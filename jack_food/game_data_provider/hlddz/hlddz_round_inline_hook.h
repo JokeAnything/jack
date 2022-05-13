@@ -32,42 +32,6 @@ void _declspec(naked) notify_give_proc_stub()
     }
 }
 
-void _declspec(naked) notify_timer_update_proc_stub()
-{
-    _asm
-    {
-        pushad    //±£Áô¼Ä´æÆ÷
-        pushfd   //±£Áô±êÖ¾¼Ä´æÆ÷
-    }
-
-    // call business proc.
-    _asm
-    {
-        push [esp + 4 + 32 + 4] // time left.
-        push ecx
-        call update_game_timer_info
-    }
-
-    _asm
-    {
-        popfd
-        popad
-    }
-
-    _asm
-    {
-        push        ebp
-        mov         ebp, esp
-        push        0FFFFFFFFh
-    }
-
-    _asm
-    {
-        jmp hlddz_game_round_impl::s_timer_update_proc_original;
-    }
-}
-
-
 void _declspec(naked) notify_game_started_proc_stub()
 {
     _asm

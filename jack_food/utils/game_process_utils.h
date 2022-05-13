@@ -1,9 +1,11 @@
 #ifndef _GAME_PROCESS_UTILS_H
 #define _GAME_PROCESS_UTILS_H
 #include <memory>
+#include <windows.h>
 
 using process_image_base_ptr = void*;
 using process_id = uint32_t;
+using process_wnd = HWND;
 
 class game_process_utils
 {
@@ -24,6 +26,14 @@ public:
     static bool restore_inline_hook(unsigned char* lphooked_addr,
         unsigned char* code_backup,
         uint32_t backup_num);
+
+    static process_wnd get_game_window(const char* wnd_class);
+
+    static void get_wnd_width_height(process_wnd wnd,
+        uint32_t& width,
+        uint32_t& height);
+
+    static void post_left_button_down_message(process_wnd wnd, uint32_t x, uint32_t y);
 
 private:
 

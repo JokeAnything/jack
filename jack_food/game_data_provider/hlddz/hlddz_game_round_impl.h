@@ -20,9 +20,10 @@ public:
 
 public:
 
+    bool register_player_action_notify();
+    void unregister_player_action_notify();
+
     bool get_current_turning(role_position& pos);
-    //void update_current_turning_given(void* object);
-    void update_player_timer_info(gdps_uint8_t view_chair_pos, uint32_t time_left);
     void parse_myself_handcards(void* myself_handcard_base);
     void parse_current_given_cards();
     void parse_bottom_cards(void* card_set_base);
@@ -39,11 +40,9 @@ public:
 
 private:
 
+    // hook data
     static void* s_notify_give_proc_original;
     static gdps_uint8_t* s_notify_give_proc_original_code_ptr;
-
-    static void* s_timer_update_proc_original;
-    static gdps_uint8_t* s_timer_update_proc_original_code_ptr;
 
     static void* s_game_started_proc_original;
     static gdps_uint8_t* s_game_started_proc_original_code_ptr;
@@ -51,14 +50,12 @@ private:
     static void* s_game_bottom_cards_notify_proc_original;
     static gdps_uint8_t* s_game_bottom_cards_notify_proc_original_code_ptr;
 
+    // round data
+
     game_status_type m_current_game_status = game_status_type_invalid;
-
     role_position m_myself_role = role_position_invalid;
-
     role_position m_current_turning_role = role_position_invalid;
-
     card_list m_myself_handchads;
-
     given_history_list m_given_history;
 };
 

@@ -39,7 +39,9 @@ process_id game_process_utils::get_process_id(const wchar_t *processName)
     {
         return 0;
     }
+    return 0;
 
+#if 0
     PROCESSENTRY32 pe32;
 
     pe32.dwSize = sizeof(PROCESSENTRY32);
@@ -63,6 +65,7 @@ process_id game_process_utils::get_process_id(const wchar_t *processName)
     ::CloseHandle(hProcessSnap);
 
     return pe32.th32ProcessID;
+#endif
 }
 
 bool game_process_utils::hook_function_table_proc(const void* target_fun_table_addr, const void* target_fun_ptr, void** original_fun_ptr)
@@ -143,4 +146,43 @@ bool game_process_utils::restore_inline_hook(unsigned char* lphooked_addr,
     ::VirtualProtect((LPBYTE)lphooked_addr, backup_num, OldProtect, &OldProtect);
     free(code_backup);
     return true;
+}
+
+process_wnd game_process_utils::get_game_window(const char* wnd_class)
+{
+    if (wnd_class == nullptr)
+    {
+        return NULL;
+    }
+    // classname : HLDDZ
+    // windowname:»¶ÀÖ¶·µØÖ÷
+    return ::FindWindow(wnd_class, nullptr);
+}
+
+void game_process_utils::get_wnd_width_height(process_wnd wnd,
+    uint32_t& width,
+    uint32_t& height)
+{
+    if (wnd == NULL)
+    {
+        return;
+    }
+    width = 0;
+    height = 0;
+    RECT rect = { 0 };
+    ::GetClientRect(wnd, &rect);
+    width = rect.right - rect.left;
+    height = rect.bottom - rect.top;
+    return;
+}
+
+void game_process_utils::post_left_button_down_message(process_wnd wnd, uint32_t x, uint32_t y)
+{
+    if (wnd == NULL)
+    {
+        return;
+    }
+    LPARAM pos = (LPARAM)y;
+    pos = (pos << 16) | x;
+    ::PostMessage(wnd, WM_LBUTTONDOWN, (WPARAM)0, (LPARAM)pos);
 }

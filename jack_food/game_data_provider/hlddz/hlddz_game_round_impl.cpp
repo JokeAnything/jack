@@ -10,9 +10,6 @@ hlddz_game_round_impl* hlddz_game_round_impl::s_myself_this = nullptr;
 void* hlddz_game_round_impl::s_notify_give_proc_original = nullptr;
 gdps_uint8_t* hlddz_game_round_impl::s_notify_give_proc_original_code_ptr = nullptr;
 
-void* hlddz_game_round_impl::s_timer_update_proc_original = nullptr;
-gdps_uint8_t* hlddz_game_round_impl::s_timer_update_proc_original_code_ptr = nullptr;
-
 void* hlddz_game_round_impl::s_game_started_proc_original = nullptr;
 gdps_uint8_t* hlddz_game_round_impl::s_game_started_proc_original_code_ptr = nullptr;
 
@@ -28,22 +25,6 @@ void __stdcall get_player_given_cards_info()
     if (hlddz_game_round_impl::s_myself_this)
     {
         hlddz_game_round_impl::s_myself_this->parse_current_given_cards();
-    }
-}
-
-void __stdcall update_game_timer_info(void* view_chair_pos, uint32_t time_left)
-{
-    if (!view_chair_pos)
-    {
-        return;
-    }
-
-    // 获取view char pos.
-    unsigned char* pos = (unsigned char*)view_chair_pos + 116;
-    gdps_uint8_t view_chair = *pos;
-    if (hlddz_game_round_impl::s_myself_this)
-    {
-        hlddz_game_round_impl::s_myself_this->update_player_timer_info(view_chair, time_left);
     }
 }
 
@@ -72,7 +53,7 @@ void __stdcall game_bottom_cards_notify(void* card_set_base)
     }
 }
 
-#include "hlddz_inline_hook.h"
+#include "hlddz_round_inline_hook.h"
 
 gdps_bool hlddz_game_round_impl::initialize()
 {
@@ -86,17 +67,6 @@ gdps_bool hlddz_game_round_impl::initialize()
         &s_notify_give_proc_original_code_ptr))
     {
         DEBUG_MSG(logger_level_fatal, DEBUG_TEXT_FORMAT("inline give cards notification failed."));
-        return false;
-    }
-
-    auto timer_update_proc_address = (uint32_t)(BO_DATA_ROUND_TIMER_UPDATE_PROC_ADDRESS(base));
-    if (!game_process_utils::set_inline_hook((unsigned char*)timer_update_proc_address,
-        (unsigned char*)notify_timer_update_proc_stub,
-        &s_timer_update_proc_original,
-        5,
-        &s_timer_update_proc_original_code_ptr))
-    {
-        DEBUG_MSG(logger_level_fatal, DEBUG_TEXT_FORMAT("inline timer update notification failed."));
         return false;
     }
 
@@ -129,15 +99,6 @@ gdps_bool hlddz_game_round_impl::initialize()
 gdps_void hlddz_game_round_impl::uninitialize()
 {
     uint32_t base = (uint32_t)game_process_utils::get_process_image_base();
-
-    auto timer_update_proc_address = (uint32_t)(BO_DATA_ROUND_TIMER_UPDATE_PROC_ADDRESS(base));
-    if (game_process_utils::restore_inline_hook((unsigned char*)timer_update_proc_address,
-        s_timer_update_proc_original_code_ptr,
-        5))
-    {
-        DEBUG_MSG(logger_level_debug, DEBUG_TEXT_FORMAT("restore inline timer update notification successfully."));
-    }
-
     auto give_notify_proc_address = (uint32_t)(BO_DATA_ROUND_GIVE_NOTIFY_PROC_ADDRESS(base));
     if (game_process_utils::restore_inline_hook((unsigned char*)give_notify_proc_address,
         s_notify_give_proc_original_code_ptr,
@@ -262,13 +223,6 @@ void hlddz_game_round_impl::parse_current_given_cards()
 
 void hlddz_game_round_impl::parse_bottom_cards(void* card_set_base)
 {
-    //auto data_mgr_base_delta_ptr = *(uint32_t*)(data_mgr_base_ptr + 0x3C);
-    //if (!data_mgr_base_delta_ptr)
-    //{
-    //    return;
-    //}
-
-    //auto card_set_this_ptr = (void*)(data_mgr_base_delta_ptr + 0x3C);
     if (!card_set_base)
     {
         return;
@@ -290,62 +244,6 @@ void hlddz_game_round_impl::parse_bottom_cards(void* card_set_base)
     void* landlord_index_ptr = (void*)(*((gdps_uint32_t*)((unsigned char*)data_mgr_base_ptr + 0x10)));
     gdps_uint8_t landlord_index = *(((unsigned char*)landlord_index_ptr + 0x124));
     DEBUG_MSG(logger_level_debug, DEBUG_TEXT_FORMAT("landlord_view_index:%d."), landlord_index);
-}
-
-//void hlddz_game_round_impl::update_current_turning_given(void* object)
-//{
-//    if (!object)
-//    {
-//        return;
-//    }
-//    gdps_uint8_t svc_chair_pos = *((unsigned char*)object + BO_DATA_ROUND_ON_GIVE_NEXT_OFFSET);
-//    auto view_player_object = get_view_player_object(svc_chair_pos);
-//    if (!view_player_object)
-//    {
-//        return;
-//    }
-//    gdps_uint8_t current_turning_chair_pos = *((unsigned char*)view_player_object + BO_DATA_ROUND_VIEW_PLAYER_OBJECT_VIEW_CHAIR_OFFSET);
-//    DEBUG_MSG(logger_level_debug, DEBUG_TEXT_FORMAT("current turning view:%0X."), current_turning_chair_pos);
-
-    //auto base_ptr = get_round_data_mgr_base();
-    //if (base_ptr)
-    //{
-    //    gdps_uint32_t handcard_count = *((gdps_uint32_t*)((unsigned char*)base_ptr + 0x78));
-    //    DEBUG_MSG(logger_level_debug, DEBUG_TEXT_FORMAT("handcard_count:%d."), handcard_count);
-    //}
-
-    //if (base_ptr)
-    //{
-    //    gdps_uint32_t handcard_index = *((gdps_uint32_t*)((unsigned char*)base_ptr + 0x7C));
-    //    DEBUG_MSG(logger_level_debug, DEBUG_TEXT_FORMAT("handcard_index:%d."), handcard_index);
-    //}
-
-    //if (base_ptr)
-    //{   
-    //    // 获取全局地主view-char.
-    //    void* landlord_index_ptr = (void*)(*((gdps_uint32_t*)((unsigned char*)base_ptr + 0x10)));
-    //    auto landlord_index_ptr_addr = ((unsigned char*)landlord_index_ptr + 0x124);
-    //    gdps_uint8_t landlord_index = *(((unsigned char*)landlord_index_ptr + 0x124));
-    //    DEBUG_MSG(logger_level_debug, DEBUG_TEXT_FORMAT("landlord_index:%d.address:%0X"), landlord_index, landlord_index_ptr_addr);
-    //}
-
-    //DEBUG_MSG(logger_level_debug, DEBUG_TEXT_FORMAT("object:%0x,data_mgr_base:%0x,view_player_object:%0x"),
-    //    object,
-    //    base_ptr,
-    //    view_player_object);
-//}
-
-void hlddz_game_round_impl::update_player_timer_info(gdps_uint8_t view_chair_pos, uint32_t time_left)
-{
-    DEBUG_MSG(logger_level_debug, DEBUG_TEXT_FORMAT("current controling:view_chair:%d,left time:%d"),
-        view_chair_pos,
-        time_left);
-
-    m_current_turning_role = (role_position)view_chair_pos;
-    if ((m_current_game_status == game_status_type_bidden) && (time_left <= 5 && time_left > 0))
-    {
-        m_current_game_status = game_status_type_multiuping;
-    }
 }
 
 bool hlddz_game_round_impl::get_card_item(void* pcard, card_item& item)

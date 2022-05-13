@@ -47,6 +47,7 @@ struct card_item
     gdps_uint8_t m_card_value = 0;
     gdps_uint8_t m_card_shape = 0;
     gdps_uint8_t m_card_level = 0;
+    gdps_uint8_t m_card_view_pos_index = 0;
 };
 
 using card_list = std::vector<card_item>;

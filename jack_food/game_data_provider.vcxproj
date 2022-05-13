@@ -23,12 +23,13 @@
     <ClInclude Include="data_service_game_api.h" />
     <ClInclude Include="data_service_object.h" />
     <ClInclude Include="game_data_provider\game_data_provider_service_defs.h" />
+    <ClInclude Include="game_data_provider\hlddz\hlddz_action_inline_hook.h" />
     <ClInclude Include="game_data_provider\hlddz\hlddz_data_bin_offset_defs.h" />
     <ClInclude Include="game_data_provider\hlddz\hlddz_game_action_impl.h" />
     <ClInclude Include="game_data_provider\hlddz\hlddz_game_data_service.h" />
     <ClInclude Include="game_data_provider\hlddz\hlddz_game_data_service_api_impl.h" />
     <ClInclude Include="game_data_provider\hlddz\hlddz_game_round_impl.h" />
-    <ClInclude Include="game_data_provider\hlddz\hlddz_inline_hook.h" />
+    <ClInclude Include="game_data_provider\hlddz\hlddz_round_inline_hook.h" />
     <ClInclude Include="game_data_provider_service_logger.h" />
     <ClInclude Include="utils\game_process_utils.h" />
   </ItemGroup>
@@ -54,7 +55,7 @@
     <ConfigurationType>DynamicLibrary</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
     <PlatformToolset>v141</PlatformToolset>
-    <CharacterSet>Unicode</CharacterSet>
+    <CharacterSet>MultiByte</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
