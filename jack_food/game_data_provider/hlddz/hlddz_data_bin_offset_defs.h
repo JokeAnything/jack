@@ -11,6 +11,9 @@ GDPS_NAMESPACE_BEGIN
 #define BO_BUTTON_OBJECT_SHOW_PROC_OFFSET            (0x00a48c40)
 #define BO_BUTTON_OBJECT_SHOW_PROC_ADDRESS(base)     (base+BO_BUTTON_OBJECT_SHOW_PROC_OFFSET)
 
+#define BO_BUTTON_OBJECT_ISSHOW_PROC_OFFSET            (0xA48D60)
+#define BO_BUTTON_OBJECT_ISSHOW_PROC_ADDRESS(base)     (base+BO_BUTTON_OBJECT_ISSHOW_PROC_OFFSET)
+
 #define BO_BUTTON_OBJECT_CLICK_PROC_OFFSET               (0x852750)
 #define BO_BUTTON_OBJECT_CLICK_PROC_ADDRESS(base)        (base + BO_BUTTON_OBJECT_CLICK_PROC_OFFSET)
 
@@ -27,6 +30,11 @@ GDPS_NAMESPACE_BEGIN
 
 #define BO_BUTTON_NAME_BTN_BUCHU                ("Btn_buchu")
 #define BO_BUTTON_NAME_BTN_CHUPAI               ("Btn_chupai")
+
+#define BO_BUTTON_NAME_BTN_MINGPAI              ("Btn_mingpai")
+#define BO_BUTTON_NAME_BTN_CHANGE_OPPONENTS     ("Btn_huanduishou")
+#define BO_BUTTON_NAME_BTN_SUPER_MULTI          ("Btn_chaojijiabei")
+#define BO_BUTTON_NAME_BTN_SUGGESTION           ("Btn_tishi")
 
 // sub_46BF80()
 #define BO_DATA_ROUND_MGR_BASE_PTR_PROC_OFFSET              (0x6BF80)
@@ -52,14 +60,21 @@ GDPS_NAMESPACE_BEGIN
 #define BO_DATA_ROUND_GAME_BOTTOM_CARDS_NOTIFY_PROC_OFFSET               (0x3530EB)
 #define BO_DATA_ROUND_GAME_BOTTOM_CARDS_NOTIFY_PROC_ADDRESS(base)        (base+BO_DATA_ROUND_GAME_BOTTOM_CARDS_NOTIFY_PROC_OFFSET)
 
+// 0074DC7F(order notify)(middle)(10bytes)
+#define BO_DATA_ACTION_GAME_ORDER_NOTIFY_PROC_OFFSET               (0x34DC7F)
+#define BO_DATA_ACTION_GAME_ORDER_NOTIFY_PROC_ADDRESS(base)        (base+BO_DATA_ACTION_GAME_ORDER_NOTIFY_PROC_OFFSET)
+
 #define BO_DATA_ROUND_ON_GIVE_CURRENT_OFFSET               (0x1)
 #define BO_DATA_ROUND_ON_GIVE_NEXT_OFFSET                  (0x2)
 #define BO_DATA_ROUND_VIEW_PLAYER_OBJECT_VIEW_CHAIR_OFFSET                  (0x15)
 
 ////////////////////UI position define///////////////////
+// here are some parameters for UI when the game main ui is in the center of screen(not in the full screen).
+// there is no influence about windows pantograph ratio,such as 124% or 100%.
+
 #define BO_DATA_UI_WINDOW_CLASS_NAME                    ("HLDDZ")
-#define BO_DATA_UI_PIXEL_CARD_WIDTH                     (150)
-#define BO_DATA_UI_PIXEL_SELECT_CARD_AREA               (46)
+#define BO_DATA_UI_PIXEL_CARD_WIDTH                     (131)
+#define BO_DATA_UI_PIXEL_SELECT_CARD_AREA               (40)
 #define BO_DATA_UI_PIXEL_CARD_BOTTOM_DELTA              (150)
 
 GDPS_NAMESPACE_END

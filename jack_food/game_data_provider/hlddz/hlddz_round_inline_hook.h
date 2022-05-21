@@ -1,3 +1,36 @@
+void __stdcall get_player_given_cards_info()
+{
+    if (hlddz_game_round_impl::s_myself_this)
+    {
+        hlddz_game_round_impl::s_myself_this->parse_current_given_cards();
+    }
+}
+
+void __stdcall game_started_notify(void* self_card_base_ptr)
+{
+    if (!self_card_base_ptr)
+    {
+        return;
+    }
+    if (hlddz_game_round_impl::s_myself_this)
+    {
+        hlddz_game_round_impl::s_myself_this->parse_myself_handcards(self_card_base_ptr);
+    }
+}
+
+void __stdcall game_bottom_cards_notify(void* card_set_base)
+{
+    if (!card_set_base)
+    {
+        return;
+    }
+
+    if (hlddz_game_round_impl::s_myself_this)
+    {
+        hlddz_game_round_impl::s_myself_this->parse_bottom_cards(card_set_base);
+    }
+}
+
 void _declspec(naked) notify_give_proc_stub()
 {
     _asm

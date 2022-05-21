@@ -1,6 +1,8 @@
 #include <windows.h>
 #include "data_service_factory.h"
 #include "data_service_game_api.h"
+#include "utils/game_process_utils.h"
+#include "game_data_provider\hlddz\hlddz_data_bin_offset_defs.h"
 #include <future>
 #include <iostream>
 
@@ -59,6 +61,20 @@ DWORD WINAPI ThreadProc(LPVOID lpParam)
         {
             break;
         }
+        else if (cmd == "select")
+        {
+            std::string cards = "";
+            getline(std::cin, cards);
+            auto ds_ptr = GDPS::data_service_factory::get_data_service_object(GDPS::data_service_type_hlddz);
+            if (ds_ptr != nullptr)
+            {
+                auto api = ds_ptr->get_data_service_game_api();
+                if (api)
+                {
+                    api->select_hand_cards(cards);
+                }
+            }
+        }
         else if (strlen(cmd.c_str()) <= 2)
         {
             auto type = std::strtol(cmd.c_str(), nullptr, 10);
@@ -71,7 +87,6 @@ DWORD WINAPI ThreadProc(LPVOID lpParam)
                     api->execute_current_player_action((GDPS::player_action_type)type);
                 }
             }
-
         }
     }
     ::FreeConsole();
@@ -103,10 +118,49 @@ BOOL APIENTRY DllMain(HMODULE hModule, DWORD ul_reason_for_call, LPVOID lpReserv
     return (TRUE);
 }
 
+//#define CARDS_X_STARTING_POSITION(wnd_width, select_area, card_width, card_count) ((wnd_width / 2)-((card_width + ((card_count - 1) * select_area)) / 2))
+//#define CARD_X_CLICK_POSITION(starting_pos, select_area, card_index) (starting_pos + card_index * select_area + select_area / 2)
+
 INT WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance,
     PSTR lpCmdLine, INT nCmdShow)
 {
-    ThreadProc(0);
-    Sleep(5000);
+//    auto wnd = game_process_utils::get_game_window(BO_DATA_UI_WINDOW_CLASS_NAME);
+//    uint32_t wnd_width = 1920;
+//    uint32_t wnd_height = 880;
+//    game_process_utils::get_wnd_width_height(wnd, wnd_width, wnd_height);
+//
+//    //::Sleep(5000);
+//    //for (int i = 0; i < 1440; i++)
+//    //{
+//    //    for (int j = 0; j < 840; j++)
+//        //{
+//        //    game_process_utils::post_left_button_down_message(wnd, 607, 883);
+//        //}
+////    }
+//
+//    auto total_cards = 18/2;
+//    std::vector<uint32_t> pos_list;
+//    for (auto index = 0; index <= total_cards - 1; index++)
+//    {
+//        if (index % 2 == 0)
+//        {
+//            continue;
+//        }
+//        //int index = 0;
+//        auto starting_pos = CARDS_X_STARTING_POSITION(wnd_width, BO_DATA_UI_PIXEL_SELECT_CARD_AREA, BO_DATA_UI_PIXEL_CARD_WIDTH, total_cards);
+//        auto x_pos = CARD_X_CLICK_POSITION(starting_pos, BO_DATA_UI_PIXEL_SELECT_CARD_AREA, index);
+//        pos_list.push_back(x_pos);
+//        auto y_pos = wnd_height - BO_DATA_UI_PIXEL_CARD_BOTTOM_DELTA;
+//        game_process_utils::post_left_button_down_message(wnd, x_pos, y_pos);
+//        //Sleep(2000);
+//        //game_process_utils::post_left_button_down_message(wnd, x_pos, y_pos);
+//    }
+
+    //for (auto&& item : selected_list)
+    //{
+    //}
+    //ThreadProc(0);
+    //Sleep(5000);
+
     return 0;
 }

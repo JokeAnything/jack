@@ -58,7 +58,7 @@ data_service_game_api_ptr hlddz_game_data_service::get_data_service_game_api()
 
 gdps_void hlddz_game_data_service::main_work_proc()
 {
-    m_data_service_impl = std::make_shared<hlddz_game_data_service_impl>();
+    m_data_service_impl = std::make_shared<hlddz_game_data_service_api_impl>();
     if (!m_data_service_impl->initialize())
     {
         return;
@@ -77,12 +77,12 @@ gdps_void hlddz_game_data_service::main_work_proc()
         //auto api = get_data_service_game_api();
         //api->execute_current_player_action(action_type);
         //action_type = player_action_type_invalid;
-        auto api = get_data_service_game_api();
-        if (api)
-        {
-            role_position pos;
-            api->get_current_turning_role(pos);
-        }
+        //auto api = get_data_service_game_api();
+        //if (api)
+        //{
+        //    role_position pos;
+        //    api->get_current_turning_role(pos);
+        //}
     }
 
     m_data_service_impl->uninitialize();

@@ -182,7 +182,10 @@ void game_process_utils::post_left_button_down_message(process_wnd wnd, uint32_t
     {
         return;
     }
+
     LPARAM pos = (LPARAM)y;
     pos = (pos << 16) | x;
-    ::PostMessage(wnd, WM_LBUTTONDOWN, (WPARAM)0, (LPARAM)pos);
+
+    ::PostMessage(wnd, WM_LBUTTONDOWN, (WPARAM)MK_LBUTTON, (LPARAM)pos);
+    ::PostMessage(wnd, WM_LBUTTONUP, (WPARAM)MK_LBUTTON, (LPARAM)pos);
 }

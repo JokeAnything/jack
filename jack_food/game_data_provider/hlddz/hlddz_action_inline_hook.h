@@ -17,13 +17,14 @@ void* __stdcall set_button_object(object_name::value_type* button_name, object_t
     return object_ptr;
 }
 
-void __stdcall show_button_object(void* button_object, uint32_t show_status)
-{
-    if (hlddz_game_action_impl::s_myself_this != nullptr)
-    {
-        hlddz_game_action_impl::s_myself_this->show_button_object(button_object, show_status);
-    }
-}
+//void __stdcall show_button_object(void* button_object, uint32_t show_status)
+//{
+//    if (hlddz_game_action_impl::s_myself_this != nullptr)
+//    {
+//        hlddz_game_action_impl::s_myself_this->show_button_object(button_object, show_status);
+//    }
+//}
+
 void __stdcall update_game_timer_info(void* view_chair_pos, uint32_t time_left)
 {
     if (!view_chair_pos)
@@ -37,6 +38,19 @@ void __stdcall update_game_timer_info(void* view_chair_pos, uint32_t time_left)
     if (hlddz_game_action_impl::s_myself_this)
     {
         hlddz_game_action_impl::s_myself_this->update_player_timer_info(view_chair, time_left);
+    }
+}
+
+void __stdcall order_notify_proc(void* order_object)
+{
+    if (!order_object)
+    {
+        return;
+    }
+
+    if (hlddz_game_action_impl::s_myself_this)
+    {
+        hlddz_game_action_impl::s_myself_this->order_notify_proc_logic(order_object);
     }
 }
 
@@ -92,17 +106,39 @@ __declspec(naked) void get_button_object_this_stub()
     }
 }
 
-__declspec(naked) void get_button_object_show_status_stub()
+//__declspec(naked) void get_button_object_show_status_stub()
+//{
+//    __asm
+//    {
+//        pushad
+//        pushfd
+//        push[esp + 32 + 4 + 4]
+//        push  ecx
+//        call show_button_object
+//        popfd
+//        popad
+//        jmp hlddz_game_action_impl::s_original_show_button_status_proc
+//    }
+//}
+
+__declspec(naked) void order_notify_stub()
 {
     __asm
     {
+        //.text:0074DC7F                 mov     ecx, [eax + 10h]
+        //.text : 0074DC82                 movzx   eax, byte ptr[esi + 2]
+        //.text : 0074DC86                 mov[ecx + 6Ch], al
+
+        mov ecx, [eax + 0x10]
+        movzx eax, byte ptr[esi + 2]
+        mov [ecx + 0x6C], al
+
         pushad
         pushfd
-        push[esp + 32 + 4 + 4]
-        push  ecx
-        call show_button_object
+        push [ebp + 0xC]
+        call order_notify_proc
         popfd
         popad
-        jmp hlddz_game_action_impl::s_original_show_button_status_proc
+        jmp hlddz_game_action_impl::s_order_notify_proc_original
     }
 }

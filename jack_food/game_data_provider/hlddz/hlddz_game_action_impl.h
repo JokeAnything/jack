@@ -12,7 +12,7 @@ GDPS_NAMESPACE_BEGIN
 using object_this = void*;
 using object_name = std::string;
 
-using player_action_notify_callback = std::function<void>(gdps_uint8_t view_chair_pos, uint32_t time_left);
+using player_action_notify_callback = std::function<void(gdps_uint8_t view_chair_pos, uint32_t time_left)>;
 
 struct hlddz_button_info
 {
@@ -42,19 +42,20 @@ public:
     gdps_bool initialize();
     gdps_void uninitialize();
 
+    bool register_player_action_notify(const player_action_notify_callback& notify_callback);
+    void unregister_player_action_notify();
+    bool click_button(player_action_type button_type);
+    bool select_cards(const card_list& selected_list, uint32_t total_cards);
+
 public:
 
-    bool click_button(player_action_type button_type);
     void save_button_object(const object_name::value_type* button_name, object_this object_ptr);
-    void show_button_object(object_this button_object_this, uint32_t show_status);
-    bool select_cards(const card_list& selected_list, uint32_t total_cards);
     void update_player_timer_info(gdps_uint8_t view_chair_pos, uint32_t time_left);
+    void order_notify_proc_logic(void* order_object);
 
 private:
 
     bool get_button_object(const object_name& btn_name, object_this object_ptr);
-    void update_game_status(player_action_type current_action_type);
-    void change_game_status(player_action_type current_action_type);
 
 public:
 
@@ -65,6 +66,9 @@ public:
     static void* s_timer_update_proc_original;
     static gdps_uint8_t* s_timer_update_proc_original_code_ptr;
 
+    static void* s_order_notify_proc_original;
+    static gdps_uint8_t* s_order_notify_proc_original_code_ptr;
+
 private:
 
     std::map<object_name, button_object_node> m_button_object_list;
@@ -72,9 +76,9 @@ private:
     std::mutex data_locker;
 
     player_action_notify_callback m_notify_callback;
-    game_status_type m_current_game_status = game_status_type_invalid;
     role_position m_myself_role = role_position_invalid;
     role_position m_current_turning_role = role_position_invalid;
+    gdps_uint8_t m_order_status = 0xFF;
 };
 
 GDPS_NAMESPACE_END

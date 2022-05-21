@@ -7,6 +7,9 @@
     <Filter Include="utils">
       <UniqueIdentifier>{005f7cef-0b52-45dd-9135-5822fb7bcfef}</UniqueIdentifier>
     </Filter>
+    <Filter Include="hlddz\game_data_impl">
+      <UniqueIdentifier>{f78986c2-c8b9-4179-8596-4cf3d2da6e9f}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="game_data_provider\game_data_provider_service_defs.h" />
@@ -22,21 +25,27 @@
       <Filter>utils</Filter>
     </ClInclude>
     <ClInclude Include="data_service_game_api.h" />
-    <ClInclude Include="game_data_provider\hlddz\hlddz_game_action_impl.h">
-      <Filter>hlddz</Filter>
+    <ClInclude Include="game_data_provider_service_logger.h" />
+    <ClInclude Include="game_data_provider\hlddz\hlddz_action_inline_hook.h">
+      <Filter>hlddz\game_data_impl</Filter>
     </ClInclude>
     <ClInclude Include="game_data_provider\hlddz\hlddz_data_bin_offset_defs.h">
-      <Filter>hlddz</Filter>
+      <Filter>hlddz\game_data_impl</Filter>
     </ClInclude>
-    <ClInclude Include="game_data_provider_service_logger.h" />
+    <ClInclude Include="game_data_provider\hlddz\hlddz_game_action_impl.h">
+      <Filter>hlddz\game_data_impl</Filter>
+    </ClInclude>
+    <ClInclude Include="game_data_provider\hlddz\hlddz_game_common_api.h">
+      <Filter>hlddz\game_data_impl</Filter>
+    </ClInclude>
     <ClInclude Include="game_data_provider\hlddz\hlddz_game_round_impl.h">
-      <Filter>hlddz</Filter>
-    </ClInclude>
-    <ClInclude Include="game_data_provider\hlddz\hlddz_action_inline_hook.h">
-      <Filter>hlddz</Filter>
+      <Filter>hlddz\game_data_impl</Filter>
     </ClInclude>
     <ClInclude Include="game_data_provider\hlddz\hlddz_round_inline_hook.h">
-      <Filter>hlddz</Filter>
+      <Filter>hlddz\game_data_impl</Filter>
+    </ClInclude>
+    <ClInclude Include="utils\game_string_utils.h">
+      <Filter>utils</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -52,10 +61,16 @@
       <Filter>utils</Filter>
     </ClCompile>
     <ClCompile Include="game_data_provider\hlddz\hlddz_game_action_impl.cpp">
-      <Filter>hlddz</Filter>
+      <Filter>hlddz\game_data_impl</Filter>
+    </ClCompile>
+    <ClCompile Include="game_data_provider\hlddz\hlddz_game_common_api.cpp">
+      <Filter>hlddz\game_data_impl</Filter>
     </ClCompile>
     <ClCompile Include="game_data_provider\hlddz\hlddz_game_round_impl.cpp">
-      <Filter>hlddz</Filter>
+      <Filter>hlddz\game_data_impl</Filter>
+    </ClCompile>
+    <ClCompile Include="utils\game_string_utils.cpp">
+      <Filter>utils</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>
