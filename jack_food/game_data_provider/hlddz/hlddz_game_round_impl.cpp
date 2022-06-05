@@ -127,6 +127,11 @@ void hlddz_game_round_impl::get_myself_handcards(card_list& myself_card_list)
     myself_card_list = m_myself_handcards;
 }
 
+role_position hlddz_game_round_impl::get_landlord_position()
+{
+    return m_landlord;
+}
+
 void hlddz_game_round_impl::get_bottom_cards(card_list& bottom_card_list)
 {
     bottom_card_list = m_bottom_cards;
@@ -391,6 +396,17 @@ gdps_uint8_t hlddz_game_round_impl::convert_ui_value_to_card_value(const card_ui
         index++;
     }
     return 0;
+}
+
+card_ui_value hlddz_game_round_impl::convert_card_to_ui_card(const card_item& item)
+{
+    card_ui_value result;
+    if (!IS_CARD_VALUE_VALID(item.m_card_value))
+    {
+        return result;
+    }
+    result = g_card_ui_table[item.m_card_value];
+    return result;
 }
 
 GDPS_NAMESPACE_END

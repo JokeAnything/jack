@@ -1,32 +1,29 @@
 #include <windows.h>
-#include "data_service_factory.h"
-#include "data_service_game_api.h"
 #include "utils/game_process_utils.h"
+#include "ai\ai_service_factory.h"
 #include "game_data_provider\hlddz\hlddz_data_bin_offset_defs.h"
 #include <future>
 #include <iostream>
 
 HMODULE g_hModule = NULL;
+ai_service_object_ptr g_ai_service_object_ptr = nullptr;
+
 void start_data_service()
 {
-    auto ds_ptr = GDPS::data_service_factory::get_data_service_object(GDPS::data_service_type_hlddz);
-    if (ds_ptr != nullptr)
+    g_ai_service_object_ptr = ai_service_factory::create_ai_service_object(ai_service_type_hlddz);
+    if (g_ai_service_object_ptr->initialize())
     {
-        if (ds_ptr->initialize())
-        {
-            ds_ptr->start_data_service();
-        }
+        g_ai_service_object_ptr->start_ai_service();
     }
 }
 
 void stop_data_service()
 {
-    auto ds_ptr = GDPS::data_service_factory::get_data_service_object(GDPS::data_service_type_hlddz);
-    if (ds_ptr != nullptr)
+    if (g_ai_service_object_ptr)
     {
-        ds_ptr->stop_data_service();
-        ds_ptr->uninitialize();
-        ds_ptr = nullptr;
+        g_ai_service_object_ptr->stop_ai_service();
+        g_ai_service_object_ptr->uninitialize();
+        ai_service_factory::destroy_ai_service_object(g_ai_service_object_ptr);
     }
 }
 
@@ -63,30 +60,30 @@ DWORD WINAPI ThreadProc(LPVOID lpParam)
         }
         else if (cmd == "select")
         {
-            std::string cards = "";
-            getline(std::cin, cards);
-            auto ds_ptr = GDPS::data_service_factory::get_data_service_object(GDPS::data_service_type_hlddz);
-            if (ds_ptr != nullptr)
-            {
-                auto api = ds_ptr->get_data_service_game_api();
-                if (api)
-                {
-                    api->select_hand_cards(cards);
-                }
-            }
+            //std::string cards = "";
+            //getline(std::cin, cards);
+            //auto ds_ptr = GDPS::data_service_factory::get_data_service_object(GDPS::data_service_type_hlddz);
+            //if (ds_ptr != nullptr)
+            //{
+            //    auto api = ds_ptr->get_data_service_game_api();
+            //    if (api)
+            //    {
+            //        api->select_hand_cards(cards);
+            //    }
+            //}
         }
         else if (strlen(cmd.c_str()) <= 2)
         {
-            auto type = std::strtol(cmd.c_str(), nullptr, 10);
-            auto ds_ptr = GDPS::data_service_factory::get_data_service_object(GDPS::data_service_type_hlddz);
-            if (ds_ptr != nullptr)
-            {
-                auto api = ds_ptr->get_data_service_game_api();
-                if (api)
-                {
-                    api->execute_current_player_action((GDPS::player_action_type)type);
-                }
-            }
+            //auto type = std::strtol(cmd.c_str(), nullptr, 10);
+            //auto ds_ptr = GDPS::data_service_factory::get_data_service_object(GDPS::data_service_type_hlddz);
+            //if (ds_ptr != nullptr)
+            //{
+            //    auto api = ds_ptr->get_data_service_game_api();
+            //    if (api)
+            //    {
+            //        api->execute_current_player_action((GDPS::player_action_type)type);
+            //    }
+            //}
         }
     }
     ::FreeConsole();
@@ -162,5 +159,6 @@ INT WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance,
     //ThreadProc(0);
     //Sleep(5000);
 
+    ThreadProc(nullptr);
     return 0;
 }

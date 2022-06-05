@@ -1,7 +1,7 @@
 #ifndef _HLDDZ_GAME_ACTION_IMPL_H
 #define _HLDDZ_GAME_ACTION_IMPL_H
 #include "../game_data_provider_service_defs.h"
-#include "../../data_service_game_api.h"
+#include "data_service_game_api.h"
 #include "../../utils/game_process_utils.h"
 
 #include <map>

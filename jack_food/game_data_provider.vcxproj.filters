@@ -10,21 +10,23 @@
     <Filter Include="hlddz\game_data_impl">
       <UniqueIdentifier>{f78986c2-c8b9-4179-8596-4cf3d2da6e9f}</UniqueIdentifier>
     </Filter>
+    <Filter Include="ipc">
+      <UniqueIdentifier>{3484448c-7421-45be-90ad-777147cf51b6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ai">
+      <UniqueIdentifier>{1a2bf2be-debf-4a30-b90e-e941af88afa0}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="game_data_provider\game_data_provider_service_defs.h" />
     <ClInclude Include="game_data_provider\hlddz\hlddz_game_data_service.h">
       <Filter>hlddz</Filter>
     </ClInclude>
     <ClInclude Include="game_data_provider\hlddz\hlddz_game_data_service_api_impl.h">
       <Filter>hlddz</Filter>
     </ClInclude>
-    <ClInclude Include="data_service_factory.h" />
-    <ClInclude Include="data_service_object.h" />
     <ClInclude Include="utils\game_process_utils.h">
       <Filter>utils</Filter>
     </ClInclude>
-    <ClInclude Include="data_service_game_api.h" />
     <ClInclude Include="game_data_provider_service_logger.h" />
     <ClInclude Include="game_data_provider\hlddz\hlddz_action_inline_hook.h">
       <Filter>hlddz\game_data_impl</Filter>
@@ -47,6 +49,42 @@
     <ClInclude Include="utils\game_string_utils.h">
       <Filter>utils</Filter>
     </ClInclude>
+    <ClInclude Include="ipc\data_ipc_service_impl.h">
+      <Filter>ipc</Filter>
+    </ClInclude>
+    <ClInclude Include="ipc\data_ipc_msg_utils.h">
+      <Filter>ipc</Filter>
+    </ClInclude>
+    <ClInclude Include="ipc\data_ipc_defs.h">
+      <Filter>ipc</Filter>
+    </ClInclude>
+    <ClInclude Include="ai\douzero_service_proxy.h">
+      <Filter>ai</Filter>
+    </ClInclude>
+    <ClInclude Include="ipc\data_ipc_factory.h">
+      <Filter>ipc</Filter>
+    </ClInclude>
+    <ClInclude Include="ipc\data_ipc_service_api.h">
+      <Filter>ipc</Filter>
+    </ClInclude>
+    <ClInclude Include="game_data_provider\hlddz\data_service_game_api.h">
+      <Filter>hlddz</Filter>
+    </ClInclude>
+    <ClInclude Include="game_data_provider\hlddz\data_service_object.h">
+      <Filter>hlddz</Filter>
+    </ClInclude>
+    <ClInclude Include="game_data_provider\hlddz\data_service_factory.h">
+      <Filter>hlddz</Filter>
+    </ClInclude>
+    <ClInclude Include="game_data_provider\game_data_provider_service_defs.h">
+      <Filter>hlddz</Filter>
+    </ClInclude>
+    <ClInclude Include="ai\ai_service_factory.h">
+      <Filter>ai</Filter>
+    </ClInclude>
+    <ClInclude Include="ai\ai_service_object.h">
+      <Filter>ai</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="game_data_provider\hlddz\hlddz_game_data_service.cpp">
@@ -56,7 +94,6 @@
       <Filter>hlddz</Filter>
     </ClCompile>
     <ClCompile Include="dll_main.cpp" />
-    <ClCompile Include="data_service_factory.cpp" />
     <ClCompile Include="utils\game_process_utils.cpp">
       <Filter>utils</Filter>
     </ClCompile>
@@ -71,6 +108,24 @@
     </ClCompile>
     <ClCompile Include="utils\game_string_utils.cpp">
       <Filter>utils</Filter>
+    </ClCompile>
+    <ClCompile Include="ipc\data_ipc_service_impl.cpp">
+      <Filter>ipc</Filter>
+    </ClCompile>
+    <ClCompile Include="ipc\data_ipc_msg_utils.cpp">
+      <Filter>ipc</Filter>
+    </ClCompile>
+    <ClCompile Include="ai\douzero_service_proxy.cpp">
+      <Filter>ai</Filter>
+    </ClCompile>
+    <ClCompile Include="ipc\data_ipc_factory.cpp">
+      <Filter>ipc</Filter>
+    </ClCompile>
+    <ClCompile Include="game_data_provider\hlddz\data_service_factory.cpp">
+      <Filter>hlddz</Filter>
+    </ClCompile>
+    <ClCompile Include="ai\ai_service_factory.cpp">
+      <Filter>ai</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

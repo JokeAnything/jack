@@ -1,7 +1,7 @@
 #ifndef _DATA_SERVICE_FACTORY_H
 #define _DATA_SERVICE_FACTORY_H
 
-#include "game_data_provider\game_data_provider_service_defs.h"
+#include "../game_data_provider_service_defs.h"
 #include "data_service_object.h"
 #include <thread>
 #include <atomic>
@@ -23,8 +23,8 @@ private:
 
 public:
 
-    static data_service_object_ptr get_data_service_object(data_service_type type);
-
+    static data_service_object_ptr create_data_service_object(data_service_type type);
+    static void destroy_data_service_object(data_service_object_ptr& data_object_ptr);
 };
 
 GDPS_NAMESPACE_END

@@ -1,7 +1,7 @@
 #ifndef _HLDDZ_GAME_DATA_SERVICE_API_IMPL_H
 #define _HLDDZ_GAME_DATA_SERVICE_API_IMPL_H
 #include "../game_data_provider_service_defs.h"
-#include "../../data_service_game_api.h"
+#include "data_service_game_api.h"
 #include "hlddz_game_action_impl.h"
 #include "hlddz_game_round_impl.h"
 
@@ -23,9 +23,13 @@ private:
     bool register_action_notify(const request_action_notify_callback& notify_callback) override;
     void unregister_action_notify() override;
     bool get_current_turning_role(role_position& pos) override;
+    role_position get_landlord_position() override;
+    bool get_bottom_cards(card_list& list) override;
     bool get_role_card_number(role_position role_id, card_number& number) override;
     bool get_role_hand_cards(role_position role_id, card_list& list) override;
-    bool get_role_given_cards(role_position role_id, card_list& list) override;
+    role_position get_last_given_role_position() override;
+    bool get_last_given_cards(card_list& list) override;
+    card_ui_value convert_card_to_ui_card(const card_item& item) override;
     bool select_hand_cards(const card_ui_value& card_selected) override;
     bool execute_current_player_action(player_action_type type) override;
 

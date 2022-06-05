@@ -1,7 +1,7 @@
 #ifndef _DATA_SERVICE_OBJECT_H
 #define _DATA_SERVICE_OBJECT_H
 
-#include "game_data_provider\game_data_provider_service_defs.h"
+#include "../game_data_provider_service_defs.h"
 #include "data_service_game_api.h"
 #include <memory>
 

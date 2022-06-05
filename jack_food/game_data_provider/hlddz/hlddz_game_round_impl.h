@@ -1,7 +1,7 @@
 #ifndef _HLDDZ_GAME_ROUND_IMPL_H
 #define _HLDDZ_GAME_ROUND_IMPL_H
 #include "../game_data_provider_service_defs.h"
-#include "../../data_service_game_api.h"
+#include "data_service_game_api.h"
 
 #include <map>
 #include <mutex>
@@ -37,12 +37,14 @@ public:
 
     void reset_round_data();
     void get_myself_handcards(card_list& myself_card_list);
+    role_position get_landlord_position();
     void get_bottom_cards(card_list& bottom_card_list);
     void get_myself_view_hand_cards(card_list& myself_view_card_list);
     role_position get_last_given_role_pos();
     void get_last_given_cards(card_list& given_card_list, role_position& who_did_role_pos, uint32_t& left_count);
     gdps_string get_card_list_string(const card_list& list);
     gdps_uint8_t convert_ui_value_to_card_value(const card_ui_value& ui_value);
+    card_ui_value convert_card_to_ui_card(const card_item& item);
 
 public:
 

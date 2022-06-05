@@ -16,6 +16,7 @@ gdps_bool hlddz_game_data_service_api_impl::initialize()
     {
         return false;
     }
+
     m_action_object.register_player_action_notify(std::bind(&hlddz_game_data_service_api_impl::notify_player_action,
         this,
         std::placeholders::_1,
@@ -25,7 +26,6 @@ gdps_bool hlddz_game_data_service_api_impl::initialize()
         this,
         std::placeholders::_1,
         std::placeholders::_2));
-
     DEBUG_MSG(logger_level_debug, DEBUG_TEXT_FORMAT("hlddz game data service initialized."));
     return true;
 }
@@ -36,6 +36,7 @@ gdps_void hlddz_game_data_service_api_impl::uninitialize()
     m_action_object.unregister_player_action_notify();
     m_game_round_object.uninitialize();
     m_action_object.uninitialize();
+
     DEBUG_MSG(logger_level_debug, DEBUG_TEXT_FORMAT("hlddz game data service deinitialized."));
 }
 
@@ -58,6 +59,24 @@ bool hlddz_game_data_service_api_impl::get_current_turning_role(role_position& p
     return false;
 }
 
+role_position hlddz_game_data_service_api_impl::get_landlord_position()
+{
+    return m_game_round_object.get_landlord_position();
+}
+
+bool hlddz_game_data_service_api_impl::get_bottom_cards(card_list& list)
+{
+    m_game_round_object.get_bottom_cards(list);
+    if (!list.empty())
+    {
+        return true;
+    }
+    else
+    {
+        return false;
+    }
+}
+
 bool hlddz_game_data_service_api_impl::get_role_card_number(role_position role_id, card_number& number)
 {
     DEBUG_MSG(logger_level_info, DEBUG_TEXT_FORMAT("pos:%d.car number:%d"), role_id, number);
@@ -66,12 +85,30 @@ bool hlddz_game_data_service_api_impl::get_role_card_number(role_position role_i
 
 bool hlddz_game_data_service_api_impl::get_role_hand_cards(role_position role_id, card_list& list)
 {
-    return false;
+    if (role_id != role_position_myself)
+    {
+        return false;
+    }
+    m_game_round_object.get_myself_handcards(list);
+    return true;
 }
 
-bool hlddz_game_data_service_api_impl::get_role_given_cards(role_position role_id, card_list& list)
+role_position hlddz_game_data_service_api_impl::get_last_given_role_position()
 {
-    return false;
+    return m_game_round_object.get_last_given_role_pos();
+}
+
+bool hlddz_game_data_service_api_impl::get_last_given_cards(card_list& list)
+{
+    role_position who_did_role_pos;
+    uint32_t left_count;
+    m_game_round_object.get_last_given_cards(list, who_did_role_pos, left_count);
+    return true;
+}
+
+card_ui_value hlddz_game_data_service_api_impl::convert_card_to_ui_card(const card_item& item)
+{
+    return m_game_round_object.convert_card_to_ui_card(item);
 }
 
 bool hlddz_game_data_service_api_impl::execute_current_player_action(player_action_type type)
@@ -81,7 +118,9 @@ bool hlddz_game_data_service_api_impl::execute_current_player_action(player_acti
     {
         m_game_round_object.reset_round_data();
     }
-    return m_action_object.click_button(type);
+    auto res = m_action_object.click_button(type);
+    change_game_status(type);
+    return res;
 }
 
 bool hlddz_game_data_service_api_impl::select_hand_cards(const card_ui_value& card_selected)
@@ -234,5 +273,6 @@ game_status_type hlddz_game_data_service_api_impl::get_current_game_status()
 {
     return m_current_game_status;
 }
+
 
 GDPS_NAMESPACE_END

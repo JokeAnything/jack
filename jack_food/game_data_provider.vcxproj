@@ -19,10 +19,13 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="data_service_factory.h" />
-    <ClInclude Include="data_service_game_api.h" />
-    <ClInclude Include="data_service_object.h" />
+    <ClInclude Include="ai\ai_service_factory.h" />
+    <ClInclude Include="ai\ai_service_object.h" />
+    <ClInclude Include="ai\douzero_service_proxy.h" />
     <ClInclude Include="game_data_provider\game_data_provider_service_defs.h" />
+    <ClInclude Include="game_data_provider\hlddz\data_service_factory.h" />
+    <ClInclude Include="game_data_provider\hlddz\data_service_game_api.h" />
+    <ClInclude Include="game_data_provider\hlddz\data_service_object.h" />
     <ClInclude Include="game_data_provider\hlddz\hlddz_action_inline_hook.h" />
     <ClInclude Include="game_data_provider\hlddz\hlddz_data_bin_offset_defs.h" />
     <ClInclude Include="game_data_provider\hlddz\hlddz_game_action_impl.h" />
@@ -32,17 +35,27 @@
     <ClInclude Include="game_data_provider\hlddz\hlddz_game_round_impl.h" />
     <ClInclude Include="game_data_provider\hlddz\hlddz_round_inline_hook.h" />
     <ClInclude Include="game_data_provider_service_logger.h" />
+    <ClInclude Include="ipc\data_ipc_defs.h" />
+    <ClInclude Include="ipc\data_ipc_factory.h" />
+    <ClInclude Include="ipc\data_ipc_msg_utils.h" />
+    <ClInclude Include="ipc\data_ipc_service_api.h" />
+    <ClInclude Include="ipc\data_ipc_service_impl.h" />
     <ClInclude Include="utils\game_process_utils.h" />
     <ClInclude Include="utils\game_string_utils.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="data_service_factory.cpp" />
+    <ClCompile Include="ai\ai_service_factory.cpp" />
+    <ClCompile Include="ai\douzero_service_proxy.cpp" />
     <ClCompile Include="dll_main.cpp" />
+    <ClCompile Include="game_data_provider\hlddz\data_service_factory.cpp" />
     <ClCompile Include="game_data_provider\hlddz\hlddz_game_action_impl.cpp" />
     <ClCompile Include="game_data_provider\hlddz\hlddz_game_common_api.cpp" />
     <ClCompile Include="game_data_provider\hlddz\hlddz_game_data_service.cpp" />
     <ClCompile Include="game_data_provider\hlddz\hlddz_game_data_service_api_impl.cpp" />
     <ClCompile Include="game_data_provider\hlddz\hlddz_game_round_impl.cpp" />
+    <ClCompile Include="ipc\data_ipc_factory.cpp" />
+    <ClCompile Include="ipc\data_ipc_msg_utils.cpp" />
+    <ClCompile Include="ipc\data_ipc_service_impl.cpp" />
     <ClCompile Include="utils\game_process_utils.cpp" />
     <ClCompile Include="utils\game_string_utils.cpp" />
   </ItemGroup>
@@ -56,7 +69,7 @@
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
-    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
     <PlatformToolset>v141</PlatformToolset>
     <CharacterSet>MultiByte</CharacterSet>
@@ -101,7 +114,7 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <LinkIncremental>true</LinkIncremental>
-    <TargetExt>.dll</TargetExt>
+    <TargetExt>.exe</TargetExt>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LinkIncremental>true</LinkIncremental>
@@ -120,14 +133,16 @@
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>../jack_logger/include;</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>../jack_logger/include;../zeromq-4.3.4/include;../json;</AdditionalIncludeDirectories>
       <AdditionalOptions>/D ZMQ_STATIC %(AdditionalOptions)</AdditionalOptions>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
+      <LanguageStandard>
+      </LanguageStandard>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
-      <AdditionalLibraryDirectories>../jack_logger/lib;</AdditionalLibraryDirectories>
-      <AdditionalDependencies>liblogger.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;Ws2_32.lib;Rpcrt4.lib;Iphlpapi.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>../jack_logger/lib;../zeromq-4.3.4\bin\Win32\Debug\v141\static;</AdditionalLibraryDirectories>
+      <AdditionalDependencies>libzmq.lib;liblogger.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;Ws2_32.lib;Rpcrt4.lib;Iphlpapi.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <GenerateDebugInformation>DebugFull</GenerateDebugInformation>
       <FullProgramDatabaseFile>true</FullProgramDatabaseFile>
     </Link>

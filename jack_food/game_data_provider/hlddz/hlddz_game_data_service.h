@@ -1,7 +1,7 @@
 #ifndef _HLDDZ_GAME_DATA_SERVICE_H
 #define _HLDDZ_GAME_DATA_SERVICE_H
 #include "../game_data_provider_service_defs.h"
-#include "../../data_service_object.h"
+#include "data_service_object.h"
 #include "hlddz_game_data_service_api_impl.h"
 
 #include <thread>
@@ -13,7 +13,7 @@ class hlddz_game_data_service : public data_service_object
 {
 public:
 
-    hlddz_game_data_service() = default;
+    hlddz_game_data_service();
     ~hlddz_game_data_service();
 
     gdps_bool initialize() override;
@@ -24,12 +24,6 @@ public:
 
 private:
 
-    gdps_void main_work_proc();
-
-private:
-
-    gdps_shared_ptr<std::thread> m_main_thread_ptr = nullptr;
-    std::atomic_bool m_is_exit = false;
     std::atomic_bool m_is_started = false;
     hlddz_game_data_service_impl_ptr m_data_service_impl = nullptr;
 };
