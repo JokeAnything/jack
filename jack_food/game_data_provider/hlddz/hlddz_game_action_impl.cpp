@@ -178,12 +178,20 @@ void hlddz_game_action_impl::order_notify_proc_logic(void* order_object)
     auto next_object = get_view_player_object(next_svc_pos);
     gdps_uint8_t next_chair_view_pos = get_view_chair_pos(next_object);
 
-    m_order_status = *((unsigned char*)order_object + 10);
+    gdps_uint8_t status = *((unsigned char*)order_object + 10);
+    if (status == 0xFF)
+    {
+        m_order_status = game_status_order_type_ordering;
+    }
+    else
+    {
+        m_order_status = game_status_order_type_robbing;
+    }
 
     DEBUG_MSG(logger_level_debug, DEBUG_TEXT_FORMAT(HLDDZ_GAME_ACTION_TEXT("order current view chair:%d, next view chair:%d, current order status:%d.")),
         cur_chair_view_pos,
         next_chair_view_pos,
-        m_order_status);
+        status);
 }
 
 bool hlddz_game_action_impl::click_button(player_action_type button_type)
@@ -246,4 +254,10 @@ bool hlddz_game_action_impl::select_cards(const card_list& selected_list, uint32
     }
     return true;
 }
+
+game_status_order_type hlddz_game_action_impl::get_current_order_status()
+{
+    return m_order_status;
+}
+
 GDPS_NAMESPACE_END

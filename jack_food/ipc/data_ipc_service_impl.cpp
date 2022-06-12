@@ -35,12 +35,9 @@ bool data_ipc_service_impl::initialize()
 
 void data_ipc_service_impl::uninitilize()
 {
-    {
-        std::unique_lock<std::mutex> lk(m_condition_variable_mutex);
-        m_condition_variable.notify_all();
-    }
-
     m_exit = true;
+    m_condition_variable.notify_one();
+
     if (m_recv_thread_ptr)
     {
         if (m_recv_thread_ptr->joinable())
@@ -76,10 +73,15 @@ bool data_ipc_service_impl::send_data_message(const data_message_string& msg)
     if (msg_len != zmq_msg_send(&send_msg, m_socket, 0))
     {
         DEBUG_MSG(logger_level_error, DEBUG_TEXT_FORMAT(DATA_IPC_SERVICE_TEXT("send data failed.")));
+        auto err_reason = zmq_errno();
+        auto err_string = zmq_strerror(err_reason);
+        if (err_string)
+        {
+            DEBUG_MSG(logger_level_error, DEBUG_TEXT_FORMAT(DATA_IPC_SERVICE_TEXT("send error info:%s.")), err_string);
+        }
     }
     else
     {
-        std::unique_lock<std::mutex> lk(m_condition_variable_mutex);
         m_condition_variable.notify_one();
     }
     zmq_msg_close(&send_msg);
@@ -91,13 +93,16 @@ void data_ipc_service_impl::recv_msg_proc()
 {
     while (1)
     {
+        DEBUG_MSG(logger_level_debug, DEBUG_TEXT_FORMAT(DATA_IPC_SERVICE_TEXT("receiving message data thread is waitin for receiving.")));
         std::unique_lock<std::mutex> lk(m_condition_variable_mutex);
         m_condition_variable.wait(lk);
         if (m_exit)
         {
+            DEBUG_MSG(logger_level_error, DEBUG_TEXT_FORMAT(DATA_IPC_SERVICE_TEXT("receiving message data thread exit.")));
             break;
         }
 
+        DEBUG_MSG(logger_level_debug, DEBUG_TEXT_FORMAT(DATA_IPC_SERVICE_TEXT("receiving message data thread is receiving data...")));
         zmq_msg_t recv_msg;
         zmq_msg_init(&recv_msg);
         auto res = zmq_msg_recv(&recv_msg, m_socket, 0);

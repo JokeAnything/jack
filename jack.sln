@@ -3,12 +3,6 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
 VisualStudioVersion = 15.0.26228.4
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "jack_brain", "jack_brain", "{8FDFBBE5-C762-4FA6-A2D5-25FCCC1E01BB}"
-EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "ipc", "ipc", "{2B7B34B3-A0AF-4A34-9CCB-C5C2A4A34FCD}"
-EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "jack_ipc_svc", "jack_brain\ipc\ipc_svc.vcxproj", "{C21C96DF-B82D-4617-9D84-95341AA73621}"
-EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "jack_logger", "jack_logger", "{EE4D1C58-863E-4A2E-8433-010500375E69}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "liblogger", "jack_logger\logger\liblogger\liblogger.vcxproj", "{BDA076B2-738C-498F-B8C2-EA5F4164D188}"
@@ -16,6 +10,13 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "jack_food", "jack_food", "{FD597A0B-FDFC-423B-B192-3189FC38D59A}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "game_data_provider", "jack_food\game_data_provider.vcxproj", "{9D82D2BC-4F40-41FE-846F-86D49E2AAF55}"
+	ProjectSection(ProjectDependencies) = postProject
+		{BDA076B2-738C-498F-B8C2-EA5F4164D188} = {BDA076B2-738C-498F-B8C2-EA5F4164D188}
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "jack_talker", "jack_talker", "{AAE0AA84-0C63-44BE-B040-4B1678BC0BEC}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "jack_talk_ipc", "jack_talker\jack_talk_ipc\jack_talk_ipc.vcxproj", "{41A1DF1F-B034-4ED2-AC79-D86A9F48601D}"
 	ProjectSection(ProjectDependencies) = postProject
 		{BDA076B2-738C-498F-B8C2-EA5F4164D188} = {BDA076B2-738C-498F-B8C2-EA5F4164D188}
 	EndProjectSection
@@ -28,14 +29,6 @@ Global
 		Release|x86 = Release|x86
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{C21C96DF-B82D-4617-9D84-95341AA73621}.Debug|x64.ActiveCfg = Debug|x64
-		{C21C96DF-B82D-4617-9D84-95341AA73621}.Debug|x64.Build.0 = Debug|x64
-		{C21C96DF-B82D-4617-9D84-95341AA73621}.Debug|x86.ActiveCfg = Debug|Win32
-		{C21C96DF-B82D-4617-9D84-95341AA73621}.Debug|x86.Build.0 = Debug|Win32
-		{C21C96DF-B82D-4617-9D84-95341AA73621}.Release|x64.ActiveCfg = Release|x64
-		{C21C96DF-B82D-4617-9D84-95341AA73621}.Release|x64.Build.0 = Release|x64
-		{C21C96DF-B82D-4617-9D84-95341AA73621}.Release|x86.ActiveCfg = Release|Win32
-		{C21C96DF-B82D-4617-9D84-95341AA73621}.Release|x86.Build.0 = Release|Win32
 		{BDA076B2-738C-498F-B8C2-EA5F4164D188}.Debug|x64.ActiveCfg = Debug|x64
 		{BDA076B2-738C-498F-B8C2-EA5F4164D188}.Debug|x64.Build.0 = Debug|x64
 		{BDA076B2-738C-498F-B8C2-EA5F4164D188}.Debug|x86.ActiveCfg = Debug|Win32
@@ -52,14 +45,21 @@ Global
 		{9D82D2BC-4F40-41FE-846F-86D49E2AAF55}.Release|x64.Build.0 = Release|x64
 		{9D82D2BC-4F40-41FE-846F-86D49E2AAF55}.Release|x86.ActiveCfg = Release|Win32
 		{9D82D2BC-4F40-41FE-846F-86D49E2AAF55}.Release|x86.Build.0 = Release|Win32
+		{41A1DF1F-B034-4ED2-AC79-D86A9F48601D}.Debug|x64.ActiveCfg = Debug|x64
+		{41A1DF1F-B034-4ED2-AC79-D86A9F48601D}.Debug|x64.Build.0 = Debug|x64
+		{41A1DF1F-B034-4ED2-AC79-D86A9F48601D}.Debug|x86.ActiveCfg = Debug|Win32
+		{41A1DF1F-B034-4ED2-AC79-D86A9F48601D}.Debug|x86.Build.0 = Debug|Win32
+		{41A1DF1F-B034-4ED2-AC79-D86A9F48601D}.Release|x64.ActiveCfg = Release|x64
+		{41A1DF1F-B034-4ED2-AC79-D86A9F48601D}.Release|x64.Build.0 = Release|x64
+		{41A1DF1F-B034-4ED2-AC79-D86A9F48601D}.Release|x86.ActiveCfg = Release|Win32
+		{41A1DF1F-B034-4ED2-AC79-D86A9F48601D}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
-		{2B7B34B3-A0AF-4A34-9CCB-C5C2A4A34FCD} = {8FDFBBE5-C762-4FA6-A2D5-25FCCC1E01BB}
-		{C21C96DF-B82D-4617-9D84-95341AA73621} = {2B7B34B3-A0AF-4A34-9CCB-C5C2A4A34FCD}
 		{BDA076B2-738C-498F-B8C2-EA5F4164D188} = {EE4D1C58-863E-4A2E-8433-010500375E69}
 		{9D82D2BC-4F40-41FE-846F-86D49E2AAF55} = {FD597A0B-FDFC-423B-B192-3189FC38D59A}
+		{41A1DF1F-B034-4ED2-AC79-D86A9F48601D} = {AAE0AA84-0C63-44BE-B040-4B1678BC0BEC}
 	EndGlobalSection
 EndGlobal

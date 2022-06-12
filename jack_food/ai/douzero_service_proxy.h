@@ -16,6 +16,8 @@
 #define IPC_FUNCTION_GAME_STATUS_TYPE_STARTED RPC_FUNCTION_NAME("game_status_type_started")
 
 #define IPC_FUNCTION_GAME_STATUS_TYPE_BIDDING RPC_FUNCTION_NAME("game_status_type_bidding")
+#define IPC_FUNCTION_GAME_STATUS_TYPE_ROBBING RPC_FUNCTION_NAME("game_status_type_robbing")
+
 #define IPC_FUNCTION_GAME_STATUS_TYPE_BIDDEN RPC_FUNCTION_NAME("game_status_type_bidden")
 #define IPC_FUNCTION_GAME_STATUS_TYPE_NO_ONE_BIDDING RPC_FUNCTION_NAME("game_status_type_no_one_bidding")
 
@@ -41,6 +43,7 @@ private:
     void uninitialize() override;
     bool start_ai_service() override;
     void stop_ai_service() override;
+    void reset_game() override;
     data_service_game_api_ptr get_data_service_game_api();
     void notify_recv_ipc_data(const data_message_string& recv_data);
     void notify_game_action(game_status_type action_type, void* extra_info);
@@ -50,8 +53,13 @@ private:
 private:
 
     void respond_game_session_created(const ssid& game_ssid, const return_list& ret_list);
+    void respond_game_bidding(const ssid& game_ssid, const return_list& ret_list);
+    void respond_game_multiuping(const ssid& game_ssid, const return_list& ret_list);
+    void respond_game_giving(const ssid& game_ssid, const return_list& ret_list);
+
     void request_game_started();
     void request_game_bidding();
+    void request_game_robbing();
     void request_game_bidden();
     void request_game_no_one_bidding();
     void request_game_multiuping();

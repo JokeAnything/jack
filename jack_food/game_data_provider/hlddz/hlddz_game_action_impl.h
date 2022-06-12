@@ -46,6 +46,7 @@ public:
     void unregister_player_action_notify();
     bool click_button(player_action_type button_type);
     bool select_cards(const card_list& selected_list, uint32_t total_cards);
+    game_status_order_type get_current_order_status();
 
 public:
 
@@ -78,7 +79,7 @@ private:
     player_action_notify_callback m_notify_callback;
     role_position m_myself_role = role_position_invalid;
     role_position m_current_turning_role = role_position_invalid;
-    gdps_uint8_t m_order_status = 0xFF;
+    game_status_order_type m_order_status = game_status_order_type_invalid;
 };
 
 GDPS_NAMESPACE_END

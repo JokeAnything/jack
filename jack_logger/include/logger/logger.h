@@ -4,6 +4,7 @@
 #include <string>
 #include <memory>
 #include <time.h>
+#include <windows.h>
 
 #define LOGGER   LOGGER
 
@@ -50,13 +51,15 @@ public:
         tm st_tm = { 0 };
         localtime_s(&st_tm, &now_time);
         string_t::value_type time_buffer[512] = { 0 };
-        sprintf_s(time_buffer, "[%02d-%02d-%02d %02d:%02d:%02d]",
+        auto tickcount = ::GetTickCount() % 1000;
+        sprintf_s(time_buffer, "[%02d-%02d-%02d %02d:%02d:%02d:%03d]",
             st_tm.tm_year + 1900,
             st_tm.tm_mon + 1,
             st_tm.tm_mday,
             st_tm.tm_hour,
             st_tm.tm_min,
-            st_tm.tm_sec);
+            st_tm.tm_sec,
+            tickcount);
         std::string current_time_text = time_buffer;
         log_text += current_time_text;
     }

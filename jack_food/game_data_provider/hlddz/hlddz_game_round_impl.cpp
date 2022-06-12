@@ -344,6 +344,14 @@ void hlddz_game_round_impl::parse_myself_handcards(void* myself_handcard_base)
         return;
     }
 
+    if (!m_myself_handcards.empty())
+    {
+        if (m_round_data_notify_proc)
+        {
+            m_round_data_notify_proc(round_data_notify_type_receive_myself_cards_reset, nullptr);
+        }
+    }
+
     if (get_card_set_list(myself_handcard_base, m_myself_handcards))
     {
         m_myself_ui_view_handcards = m_myself_handcards;

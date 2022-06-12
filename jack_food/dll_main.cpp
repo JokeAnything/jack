@@ -27,6 +27,14 @@ void stop_data_service()
     }
 }
 
+void reset_game()
+{
+    if (g_ai_service_object_ptr)
+    {
+        g_ai_service_object_ptr->reset_game();
+    }
+}
+
 HANDLE g_handle = NULL;
 
 DWORD WINAPI ThreadProc(LPVOID lpParam)
@@ -46,6 +54,10 @@ DWORD WINAPI ThreadProc(LPVOID lpParam)
         else if (cmd == "stop")
         {
             stop_data_service();
+        }
+        else if (cmd == "reset_game")
+        {
+            reset_game();
         }
         else if (cmd == "break")
         {

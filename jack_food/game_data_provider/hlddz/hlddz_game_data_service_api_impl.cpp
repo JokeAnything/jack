@@ -181,7 +181,15 @@ void hlddz_game_data_service_api_impl::notify_player_action(gdps_uint8_t view_ch
         auto current_game_status = get_current_game_status();
         if (current_game_status == game_status_type_started)
         {
-            set_current_game_status(game_status_type_bidding);
+            auto res = m_action_object.get_current_order_status();
+            if (res == game_status_order_type_robbing)
+            {
+                set_current_game_status(game_status_type_robbing);
+            }
+            else
+            {
+                set_current_game_status(game_status_type_bidding);
+            }
         }
         if (current_game_status == game_status_type_bidden)
         {
@@ -212,9 +220,11 @@ void hlddz_game_data_service_api_impl::notify_round_data(round_data_notify_type 
         break;
     case round_data_notify_type_game_over:
         set_current_game_status(game_status_type_over);
-
+        break;
+    case round_data_notify_type_receive_myself_cards_reset:
         // reset the previous round data.
-        // m_game_round_object.reset_round_data();
+        m_game_round_object.reset_round_data();
+        set_current_game_status(game_status_type_no_one_bidding);
         break;
     }
 }
@@ -222,9 +232,9 @@ void hlddz_game_data_service_api_impl::notify_round_data(round_data_notify_type 
 void hlddz_game_data_service_api_impl::set_current_game_status(game_status_type current_game_status_type)
 {
     m_current_game_status = current_game_status_type;
-    if ((m_current_game_status == game_status_type_bidding) ||
-        (m_current_game_status == game_status_type_multiuping) ||
-        (m_current_game_status == game_status_type_giving))
+    //if ((m_current_game_status == game_status_type_bidding) ||
+    //    (m_current_game_status == game_status_type_multiuping) ||
+    //    (m_current_game_status == game_status_type_giving))
     {
         if (m_request_action_notify_callback)
         {

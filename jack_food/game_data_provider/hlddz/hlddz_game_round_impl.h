@@ -15,6 +15,7 @@ enum round_data_notify_type
     round_data_notify_type_receive_myself_cards,
     round_data_notify_type_receive_bottom_cards,
     round_data_notify_type_receive_given_cards,
+    round_data_notify_type_receive_myself_cards_reset,
     round_data_notify_type_game_over,
 };
 

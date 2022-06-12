@@ -12,6 +12,7 @@ public:
     virtual void uninitialize() = 0;
     virtual bool start_ai_service() = 0;
     virtual void stop_ai_service() = 0;
+    virtual void reset_game() = 0;
 };
 
 using ai_service_object_ptr = std::shared_ptr<ai_service_object>;
