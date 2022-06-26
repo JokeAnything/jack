@@ -28,7 +28,7 @@ bool data_ipc_service_impl::initialize()
     }
     if (!m_recv_thread_ptr)
     {
-        m_recv_thread_ptr = std::make_shared<std::thread>(&data_ipc_service_impl::recv_msg_proc, this);
+        m_recv_thread_ptr = std::make_shared<std::thread>(&data_ipc_service_impl::ipc_msg_thread_proc, this);
     }
     return true;
 }
@@ -62,67 +62,95 @@ void data_ipc_service_impl::unregister_data_recv_notify()
 
 bool data_ipc_service_impl::send_data_message(const data_message_string& msg)
 {
+    std::lock_guard<std::mutex> lock(m_queue_data_sync);
+    m_ipc_send_queue.push_back(msg);
+    m_condition_variable.notify_one();
+    return true;
+}
+
+bool data_ipc_service_impl::recv_data_message_impl()
+{
+    bool ret = false;
+    zmq_msg_t recv_msg;
+    zmq_msg_init(&recv_msg);
+    auto res = zmq_msg_recv(&recv_msg, m_socket, 0);
+    if (res > 0)
+    {
+        auto msg_content = (data_message_string::value_type*)zmq_msg_data(&recv_msg);
+        if ((msg_content != nullptr) && m_notify_callback)
+        {
+            m_notify_callback(msg_content);
+        }
+        ret = true;
+    }
+    else
+    {
+        auto err_reason = zmq_errno();
+        auto err_string = zmq_strerror(err_reason);
+        if (err_string)
+        {
+            DEBUG_MSG(logger_level_error, DEBUG_TEXT_FORMAT(DATA_IPC_SERVICE_TEXT("recv error:%s.")), err_string);
+        }
+        ret = false;
+    }
+    zmq_msg_close(&recv_msg);
+    return ret;
+}
+
+bool data_ipc_service_impl::send_data_message_impl(const data_message_string& msg)
+{
     if (msg.empty())
     {
         return false;
     }
+    bool res = false;
     auto msg_len = (msg.size() + 1) * sizeof(data_message_string::value_type);
     zmq_msg_t send_msg;
     zmq_msg_init_size(&send_msg, msg_len);
     memcpy(zmq_msg_data(&send_msg), msg.c_str(), msg_len);
     if (msg_len != zmq_msg_send(&send_msg, m_socket, 0))
     {
-        DEBUG_MSG(logger_level_error, DEBUG_TEXT_FORMAT(DATA_IPC_SERVICE_TEXT("send data failed.")));
         auto err_reason = zmq_errno();
+        DEBUG_MSG(logger_level_error, DEBUG_TEXT_FORMAT(DATA_IPC_SERVICE_TEXT("send data failed,error:%d.")), err_reason);
         auto err_string = zmq_strerror(err_reason);
         if (err_string)
         {
             DEBUG_MSG(logger_level_error, DEBUG_TEXT_FORMAT(DATA_IPC_SERVICE_TEXT("send error info:%s.")), err_string);
         }
+        res = false;
     }
     else
     {
-        m_condition_variable.notify_one();
+        res = true;
     }
     zmq_msg_close(&send_msg);
-
-    return true;
+    return res;
 }
 
-void data_ipc_service_impl::recv_msg_proc()
+void data_ipc_service_impl::ipc_msg_thread_proc()
 {
     while (1)
     {
-        DEBUG_MSG(logger_level_debug, DEBUG_TEXT_FORMAT(DATA_IPC_SERVICE_TEXT("receiving message data thread is waitin for receiving.")));
-        std::unique_lock<std::mutex> lk(m_condition_variable_mutex);
-        m_condition_variable.wait(lk);
-        if (m_exit)
         {
-            DEBUG_MSG(logger_level_error, DEBUG_TEXT_FORMAT(DATA_IPC_SERVICE_TEXT("receiving message data thread exit.")));
-            break;
+            std::unique_lock<std::mutex> lk(m_condition_variable_mutex);
+            m_condition_variable.wait(lk);
+            if (m_exit)
+            {
+                DEBUG_MSG(logger_level_warning, DEBUG_TEXT_FORMAT(DATA_IPC_SERVICE_TEXT("ipc message data thread exit.")));
+                break;
+            }
         }
 
-        DEBUG_MSG(logger_level_debug, DEBUG_TEXT_FORMAT(DATA_IPC_SERVICE_TEXT("receiving message data thread is receiving data...")));
-        zmq_msg_t recv_msg;
-        zmq_msg_init(&recv_msg);
-        auto res = zmq_msg_recv(&recv_msg, m_socket, 0);
-        if (res > 0)
         {
-            auto msg_content = (data_message_string::value_type*)zmq_msg_data(&recv_msg);
-            if ((msg_content != nullptr) && m_notify_callback)
+            std::lock_guard<std::mutex> lock(m_queue_data_sync);
+            for (const auto& msg_item : m_ipc_send_queue)
             {
-                m_notify_callback(msg_content);
+                if (send_data_message_impl(msg_item))
+                {
+                    recv_data_message_impl();
+                }
             }
-        }
-        else
-        {
-            auto err_reason = zmq_errno();
-            auto err_string = zmq_strerror(err_reason);
-            if (err_string)
-            {
-                DEBUG_MSG(logger_level_error, DEBUG_TEXT_FORMAT(DATA_IPC_SERVICE_TEXT("recv error:%s.")), err_string);
-            }
-        }
-        zmq_msg_close(&recv_msg);
+            m_ipc_send_queue.clear();
+        }        
     }
 }

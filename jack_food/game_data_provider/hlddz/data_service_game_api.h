@@ -31,14 +31,15 @@ enum game_status_type
     game_status_type_starting = 1,
     game_status_type_started = 2,
     game_status_type_bidding = 3,
-    game_status_type_robbing = 4,
-    game_status_type_bidden = 5,
-    game_status_type_no_one_bidding = 6,
-    game_status_type_multiuping = 7,
-    game_status_type_multiuped = 8,
-    game_status_type_giving = 9,
-    game_status_type_given = 10,
-    game_status_type_over = 11,
+    game_status_type_ordered = 4,
+    game_status_type_robbing = 5,
+    game_status_type_bidden = 6,
+    game_status_type_no_one_bidding = 7,
+    game_status_type_multiuping = 8,
+    game_status_type_multiuped = 9,
+    game_status_type_giving = 10,
+    game_status_type_given = 11,
+    game_status_type_over = 12,
 };
 
 enum game_status_order_type

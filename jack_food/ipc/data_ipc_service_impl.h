@@ -9,6 +9,7 @@
 #include <thread>
 #include <atomic>
 #include <condition_variable>
+#include <vector>
 
 using ipc_data_notify_callback = std::function<void(const data_message_string& recv_data)>;
 
@@ -30,7 +31,10 @@ private:
 
 private:
 
-    void recv_msg_proc();
+    bool send_data_message_impl(const data_message_string& msg);
+    bool recv_data_message_impl();
+
+    void ipc_msg_thread_proc();
 
 private:
 
@@ -43,6 +47,10 @@ private:
 
     std::condition_variable m_condition_variable;
     std::mutex m_condition_variable_mutex;
+
+    using ipc_msg_queue = std::vector<data_message_string>;
+    ipc_msg_queue m_ipc_send_queue;
+    std::mutex m_queue_data_sync;
 };
 
 #endif //_DATA_IPC_SERVICE_IMPL_H

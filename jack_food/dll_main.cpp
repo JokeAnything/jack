@@ -2,6 +2,8 @@
 #include "utils/game_process_utils.h"
 #include "ai\ai_service_factory.h"
 #include "game_data_provider\hlddz\hlddz_data_bin_offset_defs.h"
+#include "game_data_provider/hlddz/data_service_game_api.h"
+
 #include <future>
 #include <iostream>
 
@@ -72,17 +74,14 @@ DWORD WINAPI ThreadProc(LPVOID lpParam)
         }
         else if (cmd == "select")
         {
-            //std::string cards = "";
-            //getline(std::cin, cards);
+            std::string cards = "";
+            getline(std::cin, cards);
+            auto ds_ptr = g_ai_service_object_ptr->get_data_service_game_api();
             //auto ds_ptr = GDPS::data_service_factory::get_data_service_object(GDPS::data_service_type_hlddz);
-            //if (ds_ptr != nullptr)
-            //{
-            //    auto api = ds_ptr->get_data_service_game_api();
-            //    if (api)
-            //    {
-            //        api->select_hand_cards(cards);
-            //    }
-            //}
+            if (ds_ptr != nullptr)
+            {
+                ds_ptr->select_hand_cards(cards);
+            }
         }
         else if (strlen(cmd.c_str()) <= 2)
         {

@@ -245,12 +245,20 @@ bool hlddz_game_action_impl::select_cards(const card_list& selected_list, uint32
         return false;
     }
 
+    DEBUG_MSG(logger_level_debug, DEBUG_TEXT_FORMAT(HLDDZ_GAME_ACTION_TEXT("[card_selected]game window width:%d height:%d")),
+        wnd_width,
+        wnd_height);
+
     auto starting_pos = CARDS_X_STARTING_POSITION(wnd_width, BO_DATA_UI_PIXEL_SELECT_CARD_AREA, BO_DATA_UI_PIXEL_CARD_WIDTH, total_cards);
-    for (auto&& item : selected_list)
+    for (const auto& item : selected_list)
     {
         auto x_pos = CARD_X_CLICK_POSITION(starting_pos, BO_DATA_UI_PIXEL_SELECT_CARD_AREA, item.m_card_view_pos_index);
         auto y_pos = wnd_height - BO_DATA_UI_PIXEL_CARD_BOTTOM_DELTA;
         game_process_utils::post_left_button_down_message(m_game_window, x_pos, y_pos);
+        DEBUG_MSG(logger_level_debug, DEBUG_TEXT_FORMAT(HLDDZ_GAME_ACTION_TEXT("[card_selected]select card index:%d click_x:%d click_y:%d.")),
+            item.m_card_view_pos_index,
+            x_pos,
+            y_pos);
     }
     return true;
 }

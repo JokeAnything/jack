@@ -44,7 +44,7 @@ private:
     bool start_ai_service() override;
     void stop_ai_service() override;
     void reset_game() override;
-    data_service_game_api_ptr get_data_service_game_api();
+    data_service_game_api_ptr get_data_service_game_api() override;
     void notify_recv_ipc_data(const data_message_string& recv_data);
     void notify_game_action(game_status_type action_type, void* extra_info);
 
@@ -55,6 +55,7 @@ private:
     void respond_game_session_created(const ssid& game_ssid, const return_list& ret_list);
     void respond_game_bidding(const ssid& game_ssid, const return_list& ret_list);
     void respond_game_multiuping(const ssid& game_ssid, const return_list& ret_list);
+    void respond_game_robbing(const ssid& game_ssid, const return_list& ret_list);
     void respond_game_giving(const ssid& game_ssid, const return_list& ret_list);
 
     void request_game_started();

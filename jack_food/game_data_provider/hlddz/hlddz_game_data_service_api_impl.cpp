@@ -191,6 +191,10 @@ void hlddz_game_data_service_api_impl::notify_player_action(gdps_uint8_t view_ch
                 set_current_game_status(game_status_type_bidding);
             }
         }
+        if (current_game_status == game_status_type_ordered)
+        {
+            set_current_game_status(game_status_type_robbing);
+        }
         if (current_game_status == game_status_type_bidden)
         {
             set_current_game_status(game_status_type_multiuping);
@@ -213,10 +217,7 @@ void hlddz_game_data_service_api_impl::notify_round_data(round_data_notify_type 
         set_current_game_status(game_status_type_bidden);
         break;
     case round_data_notify_type_receive_given_cards:
-        if (m_game_round_object.get_last_given_role_pos() == role_position_myself)
-        {
-            set_current_game_status(game_status_type_given);
-        }
+        set_current_game_status(game_status_type_given);
         break;
     case round_data_notify_type_game_over:
         set_current_game_status(game_status_type_over);

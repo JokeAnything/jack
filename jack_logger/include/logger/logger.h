@@ -20,6 +20,7 @@ enum logger_level
     logger_level_info,
     logger_level_debug,
     logger_level_warning,
+    logger_level_success,
     logger_level_error,
     logger_level_fatal,
 };

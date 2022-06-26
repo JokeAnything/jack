@@ -1,7 +1,8 @@
 #include "game_process_utils.h"
 #include <windows.h>
 #include <Tlhelp32.h>
-
+#include <chrono>
+#include <mutex>
 
 process_image_base_ptr game_process_utils::get_process_image_base()
 {
@@ -186,6 +187,9 @@ void game_process_utils::post_left_button_down_message(process_wnd wnd, uint32_t
     LPARAM pos = (LPARAM)y;
     pos = (pos << 16) | x;
 
+    ::PostMessage(wnd, WM_MOUSEMOVE, (WPARAM)MK_LBUTTON, (LPARAM)pos);
+    //std::this_thread::sleep_for(std::chrono::milliseconds(50));
     ::PostMessage(wnd, WM_LBUTTONDOWN, (WPARAM)MK_LBUTTON, (LPARAM)pos);
+    //std::this_thread::sleep_for(std::chrono::milliseconds(50));
     ::PostMessage(wnd, WM_LBUTTONUP, (WPARAM)MK_LBUTTON, (LPARAM)pos);
 }

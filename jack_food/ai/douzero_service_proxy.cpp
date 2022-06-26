@@ -14,8 +14,8 @@ douzero_service_proxy::douzero_service_proxy()
 
 douzero_service_proxy::~douzero_service_proxy()
 {
-    uninitialize();
     data_ipc_factory::destroy_data_ipc_object(m_data_ipc_service_api_ptr);
+    data_service_factory::destroy_data_service_object(m_game_data_svc_object);
 }
 
 gdps_bool douzero_service_proxy::initialize()
@@ -50,16 +50,21 @@ gdps_bool douzero_service_proxy::initialize()
 gdps_void douzero_service_proxy::uninitialize()
 {
     auto game_object_api = get_data_service_game_api();
-    game_object_api->unregister_action_notify();
+    if (game_object_api)
+    {
+        game_object_api->unregister_action_notify();
+    }
     if (m_game_data_svc_object != nullptr)
     {
         m_game_data_svc_object->uninitialize();
         m_game_data_svc_object = nullptr;
     }
 
-    m_data_ipc_service_api_ptr->unregister_data_recv_notify();
-    m_data_ipc_service_api_ptr->uninitilize();
-
+    if (m_data_ipc_service_api_ptr)
+    {
+        m_data_ipc_service_api_ptr->unregister_data_recv_notify();
+        m_data_ipc_service_api_ptr->uninitilize();
+    }
 }
 
 gdps_bool douzero_service_proxy::start_ai_service()
@@ -121,6 +126,10 @@ void douzero_service_proxy::notify_recv_ipc_data(const data_message_string& recv
     else if (function == IPC_FUNCTION_GAME_STATUS_TYPE_MULTIUPING)
     {
         respond_game_multiuping(cur_ssid, ret_list);
+    }
+    else if (function == IPC_FUNCTION_GAME_STATUS_TYPE_ROBBING)
+    {
+        respond_game_robbing(cur_ssid, ret_list);
     }
     else if (function == IPC_FUNCTION_GAME_STATUS_TYPE_GIVING)
     {
@@ -206,6 +215,40 @@ void douzero_service_proxy::respond_game_multiuping(const ssid& game_ssid, const
     }
 }
 
+void douzero_service_proxy::respond_game_robbing(const ssid& game_ssid, const return_list& ret_list)
+{
+    if (game_ssid.empty())
+    {
+        return;
+    }
+    player_action_type action_type = player_action_type_invalid;
+
+    if (ret_list.empty())
+    {
+        action_type = player_action_type_do_not_rob_landlord;
+    }
+    else
+    {
+        auto type = ret_list[0];
+        auto value = !!std::strtoul(type.c_str(), nullptr, 10);
+        DEBUG_MSG(logger_level_error, DEBUG_TEXT_FORMAT(DOUZERO_SERVICE_PROXY_TEXT("respond robbing status:%d.")), value);
+        if (value)
+        {
+            action_type = player_action_type_rob_landlord;
+        }
+        else
+        {
+            action_type = player_action_type_do_not_rob_landlord;
+        }
+    }
+
+    auto game_object_api = get_data_service_game_api();
+    if (game_object_api)
+    {
+        game_object_api->execute_current_player_action(action_type);
+    }
+}
+
 void douzero_service_proxy::respond_game_giving(const ssid& game_ssid, const return_list& ret_list)
 {
     if (game_ssid.empty())
@@ -227,7 +270,7 @@ void douzero_service_proxy::respond_game_giving(const ssid& game_ssid, const ret
         }
     }
 
-    DEBUG_MSG(logger_level_error, DEBUG_TEXT_FORMAT(DOUZERO_SERVICE_PROXY_TEXT("respond giving cards:%s.")), card_giving.c_str());
+    DEBUG_MSG(logger_level_success, DEBUG_TEXT_FORMAT(DOUZERO_SERVICE_PROXY_TEXT("respond giving cards:%s.")), card_giving.c_str());
 
     auto game_object_api = get_data_service_game_api();
     if (game_object_api)
@@ -235,10 +278,10 @@ void douzero_service_proxy::respond_game_giving(const ssid& game_ssid, const ret
         auto action_type = player_action_type_do_not_give;
         if (!card_giving.empty())
         {
-            game_object_api->select_hand_cards(card_giving);
+            //game_object_api->select_hand_cards(card_giving);
             action_type = player_action_type_do_give;
         }
-        game_object_api->execute_current_player_action(action_type);
+        //game_object_api->execute_current_player_action(action_type);
     }
 }
 
@@ -253,7 +296,7 @@ void douzero_service_proxy::notify_game_action(game_status_type action_type, voi
         request_game_bidding();
         break;
     case game_status_type_robbing:
-        request_game_bidding();
+        request_game_robbing();
         break;
     case game_status_type_bidden:
         request_game_bidden();
@@ -410,13 +453,11 @@ void douzero_service_proxy::request_game_given()
     parameter_list para_list_given_cards = format_card_list_parameter(given_card_list);
     para_list_pos.insert(para_list_pos.end(), para_list_given_cards.begin(), para_list_given_cards.end());
 
-
-    parameter_list para_list;    
-    auto req_msg = data_ipc_msg_utils::make_request_msg(m_cur_ssid, IPC_FUNCTION_GAME_STATUS_TYPE_GIVEN, para_list);
+    auto req_msg = data_ipc_msg_utils::make_request_msg(m_cur_ssid, IPC_FUNCTION_GAME_STATUS_TYPE_GIVEN, para_list_pos);
     if (m_data_ipc_service_api_ptr)
     {
         m_data_ipc_service_api_ptr->send_data_message(req_msg);
-        DEBUG_MSG(logger_level_debug, DEBUG_TEXT_FORMAT(DOUZERO_SERVICE_PROXY_TEXT("request ipc_function_game_status_type_given.")));
+        DEBUG_MSG(logger_level_debug, DEBUG_TEXT_FORMAT(DOUZERO_SERVICE_PROXY_TEXT("request ipc_function_game_status_type_given,msg:%s.")), req_msg.c_str());
     }
 }
 
@@ -434,10 +475,6 @@ void douzero_service_proxy::request_game_over()
 parameter_list douzero_service_proxy::format_card_list_parameter(const card_list& list)
 {
     parameter_list para_list;
-    if (list.empty())
-    {
-        return para_list;
-    }
 
     auto game_api = get_data_service_game_api();
     if (!game_api)
