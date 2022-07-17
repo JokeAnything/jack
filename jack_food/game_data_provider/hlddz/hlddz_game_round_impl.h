@@ -46,15 +46,18 @@ public:
     gdps_string get_card_list_string(const card_list& list);
     gdps_uint8_t convert_ui_value_to_card_value(const card_ui_value& ui_value);
     card_ui_value convert_card_to_ui_card(const card_item& item);
+    void get_selected_card_list(card_list& list);
 
 public:
 
     void parse_myself_handcards(void* myself_handcard_base);
     void parse_current_given_cards();
     void parse_bottom_cards(void* card_set_base);
+    void notify_user_select_card_change(void* notify_this);
 
 private:
 
+    void parse_selected_cards(card_list& list);
     bool get_card_item(void* pcard, card_item& item);
     bool get_card_set_list(void* pcard_set, card_list& list);
 
@@ -73,6 +76,9 @@ private:
 
     static void* s_game_bottom_cards_notify_proc_original;
     static gdps_uint8_t* s_game_bottom_cards_notify_proc_original_code_ptr;
+
+    static void* hlddz_game_round_impl::s_user_select_card_change_notify_proc_original;
+    static gdps_uint8_t* hlddz_game_round_impl::s_user_select_card_change_notify_proc_original_code_ptr;
 
     // round data
     role_position m_current_turning_role = role_position_invalid;

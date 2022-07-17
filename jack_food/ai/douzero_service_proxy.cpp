@@ -278,10 +278,10 @@ void douzero_service_proxy::respond_game_giving(const ssid& game_ssid, const ret
         auto action_type = player_action_type_do_not_give;
         if (!card_giving.empty())
         {
-            //game_object_api->select_hand_cards(card_giving);
+            game_object_api->select_hand_cards(card_giving);
             action_type = player_action_type_do_give;
         }
-        //game_object_api->execute_current_player_action(action_type);
+        game_object_api->execute_current_player_action(action_type);
     }
 }
 

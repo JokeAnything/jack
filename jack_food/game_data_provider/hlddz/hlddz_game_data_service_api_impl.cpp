@@ -77,6 +77,13 @@ bool hlddz_game_data_service_api_impl::get_bottom_cards(card_list& list)
     }
 }
 
+void hlddz_game_data_service_api_impl::get_selected_cards(card_list& list)
+{
+    m_game_round_object.get_selected_card_list(list);
+    auto ui_cards = m_game_round_object.get_card_list_string(list);
+    DEBUG_MSG(logger_level_error, DEBUG_TEXT_FORMAT("selected cards:%s."), ui_cards.c_str());
+}
+
 bool hlddz_game_data_service_api_impl::get_role_card_number(role_position role_id, card_number& number)
 {
     DEBUG_MSG(logger_level_info, DEBUG_TEXT_FORMAT("pos:%d.car number:%d"), role_id, number);
@@ -137,6 +144,12 @@ bool hlddz_game_data_service_api_impl::select_hand_cards(const card_ui_value& ca
         return false;
     }
 
+    // card index dsc.
+    std::sort(myself_view_card_list.begin(), myself_view_card_list.end(),
+        [](auto&& item_a, auto&& item_b) {
+        return item_a.m_card_view_pos_index > item_b.m_card_view_pos_index;
+    });
+
     auto current_view_count = myself_view_card_list.size();
 
     auto list = game_string_utils::split(card_selected, CARD_UI_VALUE_SPLIT_CHAR);
@@ -165,6 +178,11 @@ bool hlddz_game_data_service_api_impl::select_hand_cards(const card_ui_value& ca
     }
     if (!ready_to_give.empty())
     {
+        // sorted
+        //std::sort(ready_to_give.begin(), ready_to_give.end(),
+        //    [](auto&& item_a, auto&& item_b) {
+        //    return item_a.m_card_view_pos_index > item_b.m_card_view_pos_index;
+        //});
         return m_action_object.select_cards(ready_to_give, current_view_count);
     }
     else
@@ -284,6 +302,5 @@ game_status_type hlddz_game_data_service_api_impl::get_current_game_status()
 {
     return m_current_game_status;
 }
-
 
 GDPS_NAMESPACE_END

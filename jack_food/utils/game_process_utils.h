@@ -34,6 +34,8 @@ public:
         uint32_t& height);
 
     static void post_left_button_down_message(process_wnd wnd, uint32_t x, uint32_t y);
+    static void post_left_button_up_message(process_wnd wnd, uint32_t x, uint32_t y);
+    static uint32_t get_point_pixel(process_wnd wnd, uint32_t x, uint32_t y);
 
 private:
 

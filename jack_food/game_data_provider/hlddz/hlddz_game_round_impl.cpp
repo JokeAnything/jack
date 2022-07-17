@@ -19,6 +19,10 @@ gdps_uint8_t* hlddz_game_round_impl::s_game_started_proc_original_code_ptr = nul
 void* hlddz_game_round_impl::s_game_bottom_cards_notify_proc_original = nullptr;
 gdps_uint8_t* hlddz_game_round_impl::s_game_bottom_cards_notify_proc_original_code_ptr = nullptr;
 
+void* hlddz_game_round_impl::s_user_select_card_change_notify_proc_original = nullptr;
+gdps_uint8_t* hlddz_game_round_impl::s_user_select_card_change_notify_proc_original_code_ptr = nullptr;
+
+
 //card_ui_value g_card_ui_table[] = { "","A","2","3","4","5","6","7","8","9","10","J","Q","K","JOKER_SMALL","JOKER_BIG" };
 std::array<card_ui_value, 16> g_card_ui_table = { "","A","2","3","4","5","6","7","8","9","10","J","Q","K","JOKER_SMALL","JOKER_BIG" };
 #define IS_CARD_VALUE_VALID(x) (x > 0 && x < g_card_ui_table.size())
@@ -63,6 +67,17 @@ gdps_bool hlddz_game_round_impl::initialize()
         return false;
     }
 
+    auto game_user_select_card_change_notify_proc_address = (uint32_t)(BO_DATA_ACTION_GAME_SELECT_CHANGE_NOTIFY_PROC_ADDRESS(base));
+    if (!game_process_utils::set_inline_hook((unsigned char*)game_user_select_card_change_notify_proc_address,
+        (unsigned char*)notify_user_select_card_change_notify_proc_stub,
+        &s_user_select_card_change_notify_proc_original,
+        0xf,
+        &s_user_select_card_change_notify_proc_original_code_ptr))
+    {
+        DEBUG_MSG(logger_level_fatal, DEBUG_TEXT_FORMAT("inline game selected card notify failed."));
+        return false;
+    }
+
     DEBUG_MSG(logger_level_debug, DEBUG_TEXT_FORMAT("inline hook data notification successfully."));
     return true;
 }
@@ -70,6 +85,7 @@ gdps_bool hlddz_game_round_impl::initialize()
 gdps_void hlddz_game_round_impl::uninitialize()
 {
     uint32_t base = (uint32_t)game_process_utils::get_process_image_base();
+
     auto give_notify_proc_address = (uint32_t)(BO_DATA_ROUND_GIVE_NOTIFY_PROC_ADDRESS(base));
     if (game_process_utils::restore_inline_hook((unsigned char*)give_notify_proc_address,
         s_notify_give_proc_original_code_ptr,
@@ -92,6 +108,14 @@ gdps_void hlddz_game_round_impl::uninitialize()
         0xd))
     {
         DEBUG_MSG(logger_level_debug, DEBUG_TEXT_FORMAT("restore inline game bottom cards notification successfully."));
+    }
+
+    auto game_user_select_card_change_notify_proc_address = (uint32_t)(BO_DATA_ACTION_GAME_SELECT_CHANGE_NOTIFY_PROC_ADDRESS(base));
+    if (!game_process_utils::restore_inline_hook((unsigned char*)game_user_select_card_change_notify_proc_address,
+        s_user_select_card_change_notify_proc_original_code_ptr,
+        0xf))
+    {
+        DEBUG_MSG(logger_level_fatal, DEBUG_TEXT_FORMAT("restore inline user_select_card_change_notify successfully.."));
     }
 
     s_myself_this = nullptr;
@@ -135,6 +159,11 @@ role_position hlddz_game_round_impl::get_landlord_position()
 void hlddz_game_round_impl::get_bottom_cards(card_list& bottom_card_list)
 {
     bottom_card_list = m_bottom_cards;
+}
+
+void hlddz_game_round_impl::get_selected_card_list(card_list& list)
+{
+    parse_selected_cards(list);
 }
 
 void hlddz_game_round_impl::get_myself_view_hand_cards(card_list& myself_view_card_list)
@@ -202,7 +231,7 @@ void hlddz_game_round_impl::parse_current_given_cards()
                 auto iter = std::find_if(m_myself_ui_view_handcards.begin(),
                     m_myself_ui_view_handcards.end(),
                     [item](auto&& view_item)->bool {
-                    return view_item.m_card_value == item.m_card_value ? true : false;
+                    return ((view_item.m_card_value == item.m_card_value) && (view_item.m_card_shape == item.m_card_shape)) ? true : false;
                 });
                 if (iter != std::end(m_myself_ui_view_handcards))
                 {
@@ -282,6 +311,19 @@ void hlddz_game_round_impl::parse_bottom_cards(void* card_set_base)
     {
         m_round_data_notify_proc(round_data_notify_type_receive_bottom_cards, (void*)m_landlord);
     }
+}
+
+void hlddz_game_round_impl::parse_selected_cards(card_list& list)
+{
+    //auto data_mgr_base_ptr = (unsigned char*)get_round_data_mgr_base();
+    //if (data_mgr_base_ptr == nullptr)
+    //{
+    //    return;
+    //}
+
+    //gdps_uint32_t selected_card = *((gdps_uint32_t*)((unsigned char*)data_mgr_base_ptr + 0x3C));
+    //unsigned char* selected_card_ptr = (unsigned char*)(selected_card + 0x0A8);
+    //get_card_set_list(selected_card_ptr, list);
 }
 
 bool hlddz_game_round_impl::get_card_item(void* pcard, card_item& item)
@@ -368,6 +410,18 @@ void hlddz_game_round_impl::parse_myself_handcards(void* myself_handcard_base)
     {
         DEBUG_MSG(logger_level_debug, DEBUG_TEXT_FORMAT(HLDDZ_GAME_ROUND_TEXT("parsed myself hand cards failed.")));
     }
+}
+
+void hlddz_game_round_impl::notify_user_select_card_change(void* notify_this)
+{
+    // disable ui give cards mechanism.
+    auto data_mgr_base_ptr = (unsigned char*)get_round_data_mgr_base();
+    if (data_mgr_base_ptr == nullptr)
+    {
+        return;
+    }
+    auto ai_give = (unsigned char*)(data_mgr_base_ptr + 184);
+    *ai_give = 1;
 }
 
 gdps_string hlddz_game_round_impl::get_card_list_string(const card_list& list)

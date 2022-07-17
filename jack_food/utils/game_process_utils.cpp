@@ -187,9 +187,33 @@ void game_process_utils::post_left_button_down_message(process_wnd wnd, uint32_t
     LPARAM pos = (LPARAM)y;
     pos = (pos << 16) | x;
 
-    ::PostMessage(wnd, WM_MOUSEMOVE, (WPARAM)MK_LBUTTON, (LPARAM)pos);
+    //::PostMessage(wnd, WM_MOUSEMOVE, (WPARAM)MK_LBUTTON, (LPARAM)pos);
     //std::this_thread::sleep_for(std::chrono::milliseconds(50));
-    ::PostMessage(wnd, WM_LBUTTONDOWN, (WPARAM)MK_LBUTTON, (LPARAM)pos);
-    //std::this_thread::sleep_for(std::chrono::milliseconds(50));
-    ::PostMessage(wnd, WM_LBUTTONUP, (WPARAM)MK_LBUTTON, (LPARAM)pos);
+    ::SendMessage(wnd, WM_LBUTTONDOWN, (WPARAM)MK_LBUTTON, (LPARAM)pos);
 }
+
+void game_process_utils::post_left_button_up_message(process_wnd wnd, uint32_t x, uint32_t y)
+{
+    if (wnd == NULL)
+    {
+        return;
+    }
+
+    LPARAM pos = (LPARAM)y;
+    pos = (pos << 16) | x;
+    ::SendMessage(wnd, WM_LBUTTONUP, (WPARAM)MK_LBUTTON, (LPARAM)pos);
+}
+
+uint32_t game_process_utils::get_point_pixel(process_wnd wnd, uint32_t x, uint32_t y)
+{
+    if (wnd == NULL)
+    {
+        return 0;
+    }
+
+    auto hDc = ::GetDC(wnd);
+    COLORREF clr = ::GetPixel(hDc, x, y);
+    ::ReleaseDC(wnd,hDc);
+    return clr;
+}
+

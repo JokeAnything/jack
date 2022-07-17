@@ -31,6 +31,21 @@ void __stdcall game_bottom_cards_notify(void* card_set_base)
     }
 }
 
+void __stdcall user_select_card_change_notify(void* notify_this)
+{
+    if (!notify_this)
+    {
+        return;
+    }
+
+    if (hlddz_game_round_impl::s_myself_this)
+    {
+        hlddz_game_round_impl::s_myself_this->notify_user_select_card_change(notify_this);
+    }
+    return;
+
+}
+
 void _declspec(naked) notify_give_proc_stub()
 {
     _asm
@@ -132,5 +147,39 @@ void _declspec(naked) notify_game_bottom_cards_proc_stub()
     _asm
     {
         jmp hlddz_game_round_impl::s_game_bottom_cards_notify_proc_original;
+    }
+}
+
+
+void _declspec(naked) notify_user_select_card_change_notify_proc_stub()
+{
+    _asm
+    {
+        mov [ebp - 0xB8], ecx
+        mov eax, [ebp + 0xC]
+        mov [ebp - 0xC0], eax
+    }
+
+    _asm
+    {
+        pushad    //±£Áô¼Ä´æÆ÷
+        pushfd   //±£Áô±êÖ¾¼Ä´æÆ÷
+    }
+
+    //_asm
+    //{
+    //    push eax
+    //    call user_select_card_change_notify
+    //}
+
+    _asm
+    {
+        popfd
+        popad
+    }
+
+    _asm
+    {
+        jmp hlddz_game_round_impl::s_user_select_card_change_notify_proc_original;
     }
 }

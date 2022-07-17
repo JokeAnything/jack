@@ -87,6 +87,7 @@ public:
     virtual bool get_current_turning_role(role_position& pos) = 0;
     virtual role_position get_landlord_position() = 0;
     virtual bool get_bottom_cards(card_list& list) = 0;
+    virtual void get_selected_cards(card_list& list) = 0;
     virtual bool get_role_card_number(role_position role_id, card_number& number) = 0;
     virtual bool get_role_hand_cards(role_position role_id, card_list& list) = 0;
     virtual role_position get_last_given_role_position() = 0;

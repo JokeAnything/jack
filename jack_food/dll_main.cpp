@@ -83,6 +83,16 @@ DWORD WINAPI ThreadProc(LPVOID lpParam)
                 ds_ptr->select_hand_cards(cards);
             }
         }
+        else if (cmd == "selected")
+        {
+            auto ds_ptr = g_ai_service_object_ptr->get_data_service_game_api();
+            //auto ds_ptr = GDPS::data_service_factory::get_data_service_object(GDPS::data_service_type_hlddz);
+            if (ds_ptr != nullptr)
+            {
+                GDPS::card_list list;
+                ds_ptr->get_selected_cards(list);
+            }
+        }
         else if (strlen(cmd.c_str()) <= 2)
         {
             //auto type = std::strtol(cmd.c_str(), nullptr, 10);

@@ -6,6 +6,7 @@
 
 #include <map>
 #include <mutex>
+#include <array>
 
 GDPS_NAMESPACE_BEGIN
 
@@ -57,6 +58,10 @@ public:
 private:
 
     bool get_button_object(const object_name& btn_name, object_this object_ptr);
+    void reset_card_select_status(uint32_t total_cards);
+    uint32_t get_card_unselected_status(uint32_t index);
+    void click_card(uint32_t card_index, uint32_t total_cards);
+    uint32_t get_current_card_select_status(uint32_t card_index, uint32_t total_cards);
 
 public:
 
@@ -80,6 +85,10 @@ private:
     role_position m_myself_role = role_position_invalid;
     role_position m_current_turning_role = role_position_invalid;
     game_status_order_type m_order_status = game_status_order_type_invalid;
+
+    using card_select_state_list = std::array<uint32_t, 20>;
+    card_select_state_list m_unselected_card_state_list = { 0 };
+
 };
 
 GDPS_NAMESPACE_END

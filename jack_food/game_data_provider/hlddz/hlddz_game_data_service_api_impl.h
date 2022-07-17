@@ -6,6 +6,7 @@
 #include "hlddz_game_round_impl.h"
 
 #include <windows.h>
+#include <array>
 
 GDPS_NAMESPACE_BEGIN
 
@@ -25,6 +26,7 @@ private:
     bool get_current_turning_role(role_position& pos) override;
     role_position get_landlord_position() override;
     bool get_bottom_cards(card_list& list) override;
+    void get_selected_cards(card_list& list) override;
     bool get_role_card_number(role_position role_id, card_number& number) override;
     bool get_role_hand_cards(role_position role_id, card_list& list) override;
     role_position get_last_given_role_position() override;
@@ -42,6 +44,7 @@ private:
     void set_current_game_status(game_status_type current_game_status_type);
     void set_current_game_status_by_button_clicked(game_status_type current_game_status_type);
     game_status_type get_current_game_status();
+    void reset_card_select_status();
 
 private:
 

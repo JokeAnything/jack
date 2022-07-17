@@ -236,13 +236,89 @@ bool hlddz_game_action_impl::select_cards(const card_list& selected_list, uint32
     {
         return false;
     }
+    if (total_cards == 0)
+    {
+        return false;
+    }
 
+    // reset card selected state.
+    reset_card_select_status(total_cards);
+
+    for (int32_t cur_index = (int32_t)(total_cards - 1); cur_index >= 0; cur_index--)
+    {
+        bool selected = false;
+        for (const auto& item : selected_list)
+        {
+            if (item.m_card_view_pos_index == cur_index)
+            {
+                selected = true;
+                break;
+            }
+        }
+
+        //if (!selected)
+        //{
+        //    continue;
+        //}
+
+        // reset all cards from [0,cur_index).
+        for (int32_t reset_card_index = 0; reset_card_index < cur_index; reset_card_index++)
+        {
+            auto cur_selected_state = get_current_card_select_status(reset_card_index, total_cards);
+            auto unselected_state = get_card_unselected_status(reset_card_index);
+            if (cur_selected_state != unselected_state)
+            {
+                click_card(reset_card_index, total_cards);
+            }
+        }
+
+        // select the current card.
+        {
+            auto cur_selected_state = get_current_card_select_status(cur_index, total_cards);
+            auto unselected_state = get_card_unselected_status(cur_index);
+
+            if ((unselected_state != cur_selected_state && !selected) ||
+                (unselected_state == cur_selected_state && selected))
+            {
+                click_card(cur_index, total_cards);
+            }
+        }
+
+        //    auto current_selected_state = game_process_utils::get_point_pixel(m_game_window, x_pos, y_selected_stated_pos);
+        //    auto unselected_state = get_card_selected_status(cur_index);
+
+
+        //    DEBUG_MSG(logger_level_error, DEBUG_TEXT_FORMAT(HLDDZ_GAME_ACTION_TEXT("[card_selected_info]card index:%d before_state:%u,now_state:%u.")),
+        //        cur_index,
+        //        unselected_state,
+        //        current_selected_state);
+
+        //    if (unselected_state == 0)
+        //    {
+        //        DEBUG_MSG(logger_level_error, DEBUG_TEXT_FORMAT(HLDDZ_GAME_ACTION_TEXT("[card_selected]card index:%d selected state 0.")),
+        //            cur_index);
+        //    }
+        //    else if ((unselected_state != current_selected_state) && selected)
+        //    {
+        //        // was meant to select but selected->do nothing.
+        //    }
+        //    else if ((unselected_state != current_selected_state && !selected) ||
+        //        (unselected_state == current_selected_state && selected))
+        //    {
+        //    }
+        //}
+    }
+    return true;
+}
+
+void hlddz_game_action_impl::click_card(uint32_t card_index,uint32_t total_cards)
+{
     uint32_t wnd_width = 0;
     uint32_t wnd_height = 0;
     game_process_utils::get_wnd_width_height(m_game_window, wnd_width, wnd_height);
     if ((wnd_width == 0) || (wnd_height == 0))
     {
-        return false;
+        return;
     }
 
     DEBUG_MSG(logger_level_debug, DEBUG_TEXT_FORMAT(HLDDZ_GAME_ACTION_TEXT("[card_selected]game window width:%d height:%d")),
@@ -250,18 +326,102 @@ bool hlddz_game_action_impl::select_cards(const card_list& selected_list, uint32
         wnd_height);
 
     auto starting_pos = CARDS_X_STARTING_POSITION(wnd_width, BO_DATA_UI_PIXEL_SELECT_CARD_AREA, BO_DATA_UI_PIXEL_CARD_WIDTH, total_cards);
-    for (const auto& item : selected_list)
+
+    auto x_pos = CARD_X_CLICK_POSITION(starting_pos, BO_DATA_UI_PIXEL_SELECT_CARD_AREA, card_index);
+    //auto y_selected_stated_pos = wnd_height - BO_DATA_UI_PIXEL_CARD_SELECTED_JUDGE_DELTA;
+
+    // was meant not to select but selected->unselected.
+    // was meant to select but not selected->selected.
+    auto y_pos = wnd_height - BO_DATA_UI_PIXEL_CARD_BOTTOM_DELTA;
+    game_process_utils::post_left_button_down_message(m_game_window, x_pos, y_pos);
+    DEBUG_MSG(logger_level_debug, DEBUG_TEXT_FORMAT(HLDDZ_GAME_ACTION_TEXT("[card_selected]click down select card index:%d click_x:%d click_y:%d.")),
+        card_index,
+        x_pos,
+        y_pos);
+    ::Sleep(200);
+
     {
-        auto x_pos = CARD_X_CLICK_POSITION(starting_pos, BO_DATA_UI_PIXEL_SELECT_CARD_AREA, item.m_card_view_pos_index);
-        auto y_pos = wnd_height - BO_DATA_UI_PIXEL_CARD_BOTTOM_DELTA;
-        game_process_utils::post_left_button_down_message(m_game_window, x_pos, y_pos);
-        DEBUG_MSG(logger_level_debug, DEBUG_TEXT_FORMAT(HLDDZ_GAME_ACTION_TEXT("[card_selected]select card index:%d click_x:%d click_y:%d.")),
-            item.m_card_view_pos_index,
-            x_pos,
-            y_pos);
+        auto cur_selected_state =get_current_card_select_status(card_index, total_cards);
+        auto before_selected_state = get_card_unselected_status(card_index);
+
+        DEBUG_MSG(logger_level_error, DEBUG_TEXT_FORMAT(HLDDZ_GAME_ACTION_TEXT("[card_selected_info]after click down card index:%d before_state:%u,now_state:%u.")),
+            card_index,
+            before_selected_state,
+            cur_selected_state);
     }
-    return true;
+
+    game_process_utils::post_left_button_up_message(m_game_window, x_pos, y_pos);
+    DEBUG_MSG(logger_level_debug, DEBUG_TEXT_FORMAT(HLDDZ_GAME_ACTION_TEXT("[card_selected]click up select card index:%d click_x:%d click_y:%d.")),
+        card_index,
+        x_pos,
+        y_pos);
+    ::Sleep(200);
+
+    {
+        auto cur_selected_state = get_current_card_select_status(card_index, total_cards);
+        auto before_selected_state = get_card_unselected_status(card_index);
+
+        DEBUG_MSG(logger_level_error, DEBUG_TEXT_FORMAT(HLDDZ_GAME_ACTION_TEXT("[card_selected_info]after click up card index:%d before_state:%u,now_state:%u.")),
+            card_index,
+            before_selected_state,
+            cur_selected_state);
+    }
 }
+
+uint32_t hlddz_game_action_impl::get_current_card_select_status(uint32_t card_index, uint32_t total_cards)
+{
+    uint32_t wnd_width = 0;
+    uint32_t wnd_height = 0;
+    game_process_utils::get_wnd_width_height(m_game_window, wnd_width, wnd_height);
+    if ((wnd_width == 0) || (wnd_height == 0))
+    {
+        return 0;
+    }
+    auto starting_pos = CARDS_X_STARTING_POSITION(wnd_width, BO_DATA_UI_PIXEL_SELECT_CARD_AREA, BO_DATA_UI_PIXEL_CARD_WIDTH, total_cards);
+    auto x_pos = CARD_X_CLICK_POSITION(starting_pos, BO_DATA_UI_PIXEL_SELECT_CARD_AREA, card_index);
+    auto y_selected_stated_pos = wnd_height - BO_DATA_UI_PIXEL_CARD_SELECTED_JUDGE_DELTA;
+    return game_process_utils::get_point_pixel(m_game_window, x_pos, y_selected_stated_pos);
+}
+
+void hlddz_game_action_impl::reset_card_select_status(uint32_t total_cards)
+{
+    for (size_t i = 0; i < m_unselected_card_state_list.size(); i++)
+    {
+        m_unselected_card_state_list[i] = 0;
+    }
+
+    uint32_t wnd_width = 0;
+    uint32_t wnd_height = 0;
+    game_process_utils::get_wnd_width_height(m_game_window, wnd_width, wnd_height);
+    if ((wnd_width == 0) || (wnd_height == 0))
+    {
+        DEBUG_MSG(logger_level_warning, DEBUG_TEXT_FORMAT(HLDDZ_GAME_ACTION_TEXT("[card_selected]game windows metric got failed.")));
+        return;
+    }
+
+
+    auto starting_pos = CARDS_X_STARTING_POSITION(wnd_width, BO_DATA_UI_PIXEL_SELECT_CARD_AREA, BO_DATA_UI_PIXEL_CARD_WIDTH, total_cards);
+    for (size_t i = 0; i < total_cards; i++)
+    {
+        auto x_pos = CARD_X_CLICK_POSITION(starting_pos, BO_DATA_UI_PIXEL_SELECT_CARD_AREA, i);
+        auto y_pos = wnd_height - BO_DATA_UI_PIXEL_CARD_SELECTED_JUDGE_DELTA;
+        auto state = game_process_utils::get_point_pixel(m_game_window, x_pos, y_pos);
+        m_unselected_card_state_list[i] = state;
+        /*DEBUG_MSG(logger_level_error, DEBUG_TEXT_FORMAT(HLDDZ_GAME_ACTION_TEXT("[card_selected_info]card index:%d reset_state:%u.")),
+            i,
+            state);*/
+    }
+}
+
+uint32_t hlddz_game_action_impl::get_card_unselected_status(uint32_t index)
+{
+    if (index >= m_unselected_card_state_list.size())
+    {
+        return 0;
+    }
+    return m_unselected_card_state_list[index];
+}
+
 
 game_status_order_type hlddz_game_action_impl::get_current_order_status()
 {
